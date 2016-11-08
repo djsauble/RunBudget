@@ -20,6 +20,7 @@
 		FB2016AE1D9DD40900558187 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2016AD1D9DD40900558187 /* ExtensionDelegate.swift */; };
 		FB2016B01D9DD40900558187 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2016AF1D9DD40900558187 /* ComplicationController.swift */; };
 		FB2016B21D9DD40900558187 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB2016B11D9DD40900558187 /* Assets.xcassets */; };
+		FB8A17CB1DD238270030D965 /* WorkoutData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8A17CA1DD238270030D965 /* WorkoutData.swift */; };
 		FBBC7FA21DD1655E00F2E5E0 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBC7FA11DD1655E00F2E5E0 /* HealthKit.framework */; };
 		FBBC7FA51DD1656E00F2E5E0 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBC7FA41DD1656E00F2E5E0 /* HealthKit.framework */; };
 /* End PBXBuildFile section */
@@ -84,6 +85,7 @@
 		FB2016AF1D9DD40900558187 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		FB2016B11D9DD40900558187 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB2016B31D9DD40900558187 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB8A17CA1DD238270030D965 /* WorkoutData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutData.swift; sourceTree = "<group>"; };
 		FBBC7F9F1DD1655E00F2E5E0 /* ItsComplicated.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ItsComplicated.entitlements; sourceTree = "<group>"; };
 		FBBC7FA11DD1655E00F2E5E0 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FBBC7FA31DD1656E00F2E5E0 /* ItsComplicated WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ItsComplicated WatchKit Extension.entitlements"; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				FB2016AF1D9DD40900558187 /* ComplicationController.swift */,
 				FB2016B11D9DD40900558187 /* Assets.xcassets */,
 				FB2016B31D9DD40900558187 /* Info.plist */,
+				FB8A17CA1DD238270030D965 /* WorkoutData.swift */,
 			);
 			path = "ItsComplicated WatchKit Extension";
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB2016AE1D9DD40900558187 /* ExtensionDelegate.swift in Sources */,
+				FB8A17CB1DD238270030D965 /* WorkoutData.swift in Sources */,
 				FB2016AC1D9DD40900558187 /* InterfaceController.swift in Sources */,
 				FB2016B01D9DD40900558187 /* ComplicationController.swift in Sources */,
 			);
