@@ -22,7 +22,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }
     
     func getTimelineEndDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-        handler(NSDate(timeIntervalSinceNow: (60 * 60 * 24)) as Date)
+        handler(NSDate(timeIntervalSinceNow: (60 * 60 * 1)) as Date)
     }
     
     func getPrivacyBehavior(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationPrivacyBehavior) -> Void) {
@@ -35,11 +35,16 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         // Call the handler with the current timeline entry
         if complication.family == .circularSmall {
             WorkoutData.shared.getHoursSinceLastWorkout(handler: {
-                (hours: Int) in
+                (hours: Int?) in
 
                 let template = CLKComplicationTemplateCircularSmallSimpleText()
                 
-                template.textProvider = CLKSimpleTextProvider(text: String(hours))
+                if let hours = hours {
+                    template.textProvider = CLKSimpleTextProvider(text: String(hours))
+                }
+                else {
+                    template.textProvider = CLKSimpleTextProvider(text: "∞")
+                }
                 
                 let entry = CLKComplicationTimelineEntry(date: NSDate() as Date, complicationTemplate: template)
                 
@@ -67,8 +72,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         // This method will be called once per supported complication, and the results will be cached
         if complication.family == .circularSmall {
             let template = CLKComplicationTemplateCircularSmallSimpleText()
-        
-            template.textProvider = CLKSimpleTextProvider(text: "0")
+
+            template.textProvider = CLKSimpleTextProvider(text: "—")
         
             handler(template)
         }

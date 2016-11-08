@@ -12,24 +12,83 @@ class WorkoutData {
     static var shared: WorkoutData = WorkoutData()
     var healthStore: HKHealthStore?
     
+    // MARK: – Public interface
+    
     // Fetch the number of hours that have elapsed since the last workout
-    func getHoursSinceLastWorkout(handler: @escaping (Int) -> Void) -> Void {
-        authorizeHealthKit(done: {
-            (healthStore: HKHealthStore) in
-            self.dateOfLastWorkout(healthStore: healthStore, done: {
-                (date: Date) in
-                DispatchQueue.main.async() {
-                    handler(Int(Date().timeIntervalSince(date) / 60 / 60))
+    public func getHoursSinceLastWorkout(handler: @escaping (Int?) -> Void) -> Void {
+        lastWorkout(handler: {
+            (workout: HKWorkout?) in
+            
+            DispatchQueue.main.async() {
+                if let workout = workout {
+                    handler(Int(Date().timeIntervalSince(workout.startDate) / 60 / 60))
                 }
-            })
+                else {
+                    handler(nil)
+                }
+            }
+        })
+    }
+
+    // Get date of the last workout
+    public func dateOfLastWorkout(handler: @escaping (Date?) -> Void) {
+        lastWorkout(handler: {
+            (workout: HKWorkout?) in
+            
+            DispatchQueue.main.async() {
+                if let workout = workout {
+                    handler(workout.startDate)
+                }
+                else {
+                    handler(nil)
+                }
+            }
+        })
+    }
+    
+    // MARK: – Private implementation
+    
+    // Get the last workout
+    private func lastWorkout(handler: @escaping (HKWorkout?) -> Void) {
+        authorizeHealthKit(handler: {
+            (healthStore: HKHealthStore) in
+            
+            // Seven days ago
+            let startDate = Date(timeIntervalSinceNow: -(60 * 60 * 24 * 7))
+            
+            // Workouts
+            let quantityType = HKObjectType.workoutType()
+            
+            // Only fetch running workouts
+            let runningPredicate = HKQuery.predicateForWorkouts(with: .running)
+            let agePredicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [])
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [runningPredicate, agePredicate])
+            
+            // Get the most recent workout
+            let query = HKSampleQuery(sampleType: quantityType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
+                query, results, error in
+                
+                guard let samples = results as? [HKWorkout] else {
+                    fatalError("An error occurred fetching the list of workouts")
+                }
+                
+                if let last = samples.last {
+                    handler(last)
+                }
+                else {
+                    handler(nil)
+                }
+            }
+            
+            healthStore.execute(query)
         })
     }
     
     // Request authorization
-    func authorizeHealthKit(done: @escaping (HKHealthStore) -> Void) {
+    private func authorizeHealthKit(handler: @escaping (HKHealthStore) -> Void) {
         
         if let healthStore = self.healthStore {
-            done(healthStore)
+            handler(healthStore)
         }
         else {
             // App requires HealthKit
@@ -48,28 +107,9 @@ class WorkoutData {
                 (success: Bool, error: Error?) in
                 if (success) {
                     self.healthStore = healthStore
-                    done(healthStore)
+                    handler(healthStore)
                 }
             })
         }
-    }
-    
-    // Get date of the last workout
-    func dateOfLastWorkout(healthStore: HKHealthStore, done: @escaping (Date) -> Void) {
-        
-        let quantityType = HKObjectType.workoutType()
-        
-        // Long-running query for daily data
-        let query = HKSampleQuery(sampleType: quantityType, predicate: nil, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
-            query, results, error in
-            
-            guard let samples = results as? [HKWorkout] else {
-                fatalError("An error occurred fetching the list of workouts")
-            }
-            
-            done(samples.last!.startDate)
-        }
-        
-        healthStore.execute(query)
     }
 }
