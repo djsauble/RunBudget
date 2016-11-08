@@ -7,7 +7,7 @@
 //
 
 import ClockKit
-
+import HealthKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
@@ -34,13 +34,17 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         // Call the handler with the current timeline entry
         if complication.family == .circularSmall {
-            let template = CLKComplicationTemplateCircularSmallSimpleText()
-        
-            template.textProvider = CLKSimpleTextProvider(text: "Question", shortText: "88")
-        
-            let entry = CLKComplicationTimelineEntry(date: NSDate() as Date, complicationTemplate: template)
-        
-            handler(entry)
+            getHoursSinceLastWorkout(handler: {
+                (hours: Int) in
+                
+                let template = CLKComplicationTemplateCircularSmallSimpleText()
+                
+                template.textProvider = CLKSimpleTextProvider(text: "Question", shortText: String(hours))
+                
+                let entry = CLKComplicationTimelineEntry(date: NSDate() as Date, complicationTemplate: template)
+                
+                handler(entry)
+            })
         }
         else {
             handler(nil)
@@ -73,4 +77,59 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         }
     }
     
+    // MARK: – Workout History
+    
+    func getHoursSinceLastWorkout(handler: @escaping (Int) -> Void) -> Void {
+        authorizeHealthKit(done: {
+            (healthStore: HKHealthStore) in
+            self.dateOfLastWorkout(healthStore: healthStore, done: {
+                (date: Date) in
+                DispatchQueue.main.async() {
+                    handler(Int(Date().timeIntervalSince(date) / 60 / 60))
+                }
+            })
+        })
+    }
+    
+    // Request authorization
+    func authorizeHealthKit(done: @escaping (HKHealthStore) -> Void) {
+        
+        // App requires HealthKit
+        if !HKHealthStore.isHealthDataAvailable() {
+            return
+        }
+        let healthStore = HKHealthStore()
+        
+        // Set the types you want to read from HK Store
+        let healthKitTypesToRead = Set<HKObjectType>([
+            HKObjectType.workoutType()
+        ])
+        
+        // Request HealthKit authorization
+        healthStore.requestAuthorization(toShare: nil, read: healthKitTypesToRead, completion: {
+            (success: Bool, error: Error?) in
+            if (success) {
+                done(healthStore)
+            }
+        })
+    }
+    
+    // Get date of the last workout
+    func dateOfLastWorkout(healthStore: HKHealthStore, done: @escaping (Date) -> Void) {
+        
+        let quantityType = HKObjectType.workoutType()
+        
+        // Long-running query for daily data
+        let query = HKSampleQuery(sampleType: quantityType, predicate: nil, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
+            query, results, error in
+            
+            guard let samples = results as? [HKWorkout] else {
+                fatalError("An error occurred fetching the list of workouts")
+            }
+            
+            done(samples.last!.startDate)
+        }
+        
+        healthStore.execute(query)
+    }
 }
