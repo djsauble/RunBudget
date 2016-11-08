@@ -14,15 +14,15 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Timeline Configuration
     
     func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
-        handler([.forward, .backward])
+        handler([.forward])
     }
     
     func getTimelineStartDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-        handler(nil)
+        handler(NSDate() as Date)
     }
     
     func getTimelineEndDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-        handler(nil)
+        handler(NSDate(timeIntervalSinceNow: (60 * 60 * 24)) as Date)
     }
     
     func getPrivacyBehavior(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationPrivacyBehavior) -> Void) {
@@ -33,7 +33,18 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         // Call the handler with the current timeline entry
-        handler(nil)
+        if complication.family == .circularSmall {
+            let template = CLKComplicationTemplateCircularSmallSimpleText()
+        
+            template.textProvider = CLKSimpleTextProvider(text: "Question", shortText: "88")
+        
+            let entry = CLKComplicationTimelineEntry(date: NSDate() as Date, complicationTemplate: template)
+        
+            handler(entry)
+        }
+        else {
+            handler(nil)
+        }
     }
     
     func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
@@ -50,7 +61,16 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
-        handler(nil)
+        if complication.family == .circularSmall {
+            let template = CLKComplicationTemplateCircularSmallSimpleText()
+        
+            template.textProvider = CLKSimpleTextProvider(text: "Exclamation", shortText: "!")
+        
+            handler(template)
+        }
+        else {
+            handler(nil)
+        }
     }
     
 }
