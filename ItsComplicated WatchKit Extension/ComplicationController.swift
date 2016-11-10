@@ -46,7 +46,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                     template.textProvider = CLKSimpleTextProvider(text: "∞")
                 }
                 
-                let entry = CLKComplicationTimelineEntry(date: NSDate() as Date, complicationTemplate: template)
+                let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
                 
                 handler(entry)
             })
@@ -74,7 +74,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             let template = CLKComplicationTemplateCircularSmallSimpleText()
 
             template.textProvider = CLKSimpleTextProvider(text: "—")
-        
+
             handler(template)
         }
         else {

@@ -9,10 +9,21 @@
 import WatchKit
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
+    
+    override init() {
+        super.init()
+        
+        // Schedule the next complication refresh
+        scheduleComplicationRefresh()
+        
+        // Let us know whenever data changes in our HKHealthStore
+        WorkoutData.shared.listenForWorkouts {
+            self.refreshComplications()
+        }
+    }
 
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
-        scheduleComplicationRefresh()
     }
 
     func applicationDidBecomeActive() {
@@ -32,12 +43,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
             case let backgroundTask as WKApplicationRefreshBackgroundTask:
                 // Be sure to complete the background task once you’re done.
                 self.scheduleComplicationRefresh()
-                let server = CLKComplicationServer.sharedInstance()
-                if let activeComplications = server.activeComplications {
-                    for complication in activeComplications {
-                        server.reloadTimeline(for: complication)
-                    }
-                }
+                self.refreshComplications()
                 backgroundTask.setTaskCompleted()
             case let snapshotTask as WKSnapshotRefreshBackgroundTask:
                 // Snapshot tasks have a unique completion call, make sure to set your expiration date
@@ -55,8 +61,17 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         }
     }
     
+    func refreshComplications() {
+        print("Refreshing complications")
+        let server = CLKComplicationServer.sharedInstance()
+        if let activeComplications = server.activeComplications {
+            for complication in activeComplications {
+                server.reloadTimeline(for: complication)
+            }
+        }
+    }
+    
     func scheduleComplicationRefresh() {
-        print("Scheduling complication refresh")
         WorkoutData.shared.dateOfLastWorkout(handler: {
             (date: Date?) in
             
