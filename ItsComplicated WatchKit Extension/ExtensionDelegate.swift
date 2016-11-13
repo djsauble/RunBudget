@@ -13,13 +13,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     override init() {
         super.init()
         
-        // Schedule the next complication refresh
+        // Refresh complications and nchedule the next refresh
         scheduleComplicationRefresh()
-        
-        // Let us know whenever data changes in our HKHealthStore
-        WorkoutData.shared.listenForWorkouts {
-            self.refreshComplications()
-        }
+        refreshComplications()
     }
 
     func applicationDidFinishLaunching() {

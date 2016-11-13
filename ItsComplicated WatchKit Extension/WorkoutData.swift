@@ -46,38 +46,6 @@ class WorkoutData {
         })
     }
     
-    // Listen for new workouts
-    public func listenForWorkouts(handler: @escaping () -> Void) {
-        authorizeHealthKit(handler: {
-            (healthStore: HKHealthStore) in
-            
-            // Workouts
-            let quantityType = HKObjectType.workoutType()
-            
-            // Only fetch running workouts
-            let runningPredicate = HKQuery.predicateForWorkouts(with: .running)
-            let startDatePredicate = HKQuery.predicateForSamples(withStart: Date(), end: nil, options: [.strictStartDate])
-            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [runningPredicate, startDatePredicate])
-            
-            // Listen for workouts
-            let query = HKObserverQuery(sampleType: quantityType, predicate: predicate, updateHandler: {
-                (query: HKObserverQuery, completionHandler: HKObserverQueryCompletionHandler, error: Error?) in
-
-                if let error = error {
-                    fatalError(error.localizedDescription)
-                }
-                else {
-                    handler()
-                    
-                    // If you have subscribed for background updates you must call the completion handler here.
-                    completionHandler()
-                }
-            })
-            
-            healthStore.execute(query)
-        })
-    }
-    
     // MARK: – Private implementation
     
     // Get the last workout
