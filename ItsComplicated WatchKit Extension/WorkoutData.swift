@@ -21,7 +21,7 @@ class WorkoutData {
             
             DispatchQueue.main.async() {
                 if let workout = workout {
-                    handler(Int(Date().timeIntervalSince(workout.startDate) / 60 / 60))
+                    handler(Int(Date().timeIntervalSince(workout.endDate) / 60 / 60))
                 }
                 else {
                     handler(nil)
@@ -43,6 +43,81 @@ class WorkoutData {
                     handler(nil)
                 }
             }
+        })
+    }
+    
+    // Get trending data from the last two weeks
+    //
+    // * Miles last week
+    // * Miles this week
+    // * Time since last workout
+    // * Time since Monday
+    public func trendingData(handler: @escaping (Double, Double, TimeInterval, TimeInterval) -> Void) {
+        authorizeHealthKit(handler: {
+            (healthStore: HKHealthStore) in
+            
+            let calendar = Calendar.current
+            
+            // Get the Monday from this week
+            var components = calendar.dateComponents([.year, .month, .day, .weekday], from: Date())
+            if let day = components.day {
+                if let offset = components.weekday {
+                    components.day = day - ((offset - 1) + 6) % 7
+                }
+            }
+            let thisMonday = calendar.date(from: components)
+            
+            // Get the Monday in the previous week
+            if let day = components.day {
+                components.day = day - 7
+            }
+            let lastMonday = calendar.date(from: components)
+            
+            // Compute sample query parameters
+            let quantityType = HKObjectType.workoutType()
+            let datePredicate = HKQuery.predicateForSamples(withStart: lastMonday, end: nil, options: [])
+            let runningPredicate = HKQuery.predicateForWorkouts(with: .running)
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, runningPredicate])
+            
+            // Construct the query
+            let query = HKSampleQuery(sampleType: quantityType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: [], resultsHandler: {
+                (query, samples, error) in
+                
+                var lastWeek = 0.0
+                var thisWeek = 0.0
+                var sinceMonday = 0.0
+                var sinceLastWorkout = 0.0
+                if let thisMonday = thisMonday {
+                    
+                    // Get the time elapsed since this Monday
+                    sinceMonday = Date().timeIntervalSince(thisMonday)
+                    
+                    if let samples = samples as? [HKWorkout] {
+                        
+                        // Get the time elapsed since the last workout
+                        if let lastWorkout = samples.last {
+                            sinceLastWorkout = Date().timeIntervalSince(lastWorkout.endDate)
+                        }
+                        
+                        // Sum the number of miles in each week
+                        for sample in samples {
+                            if let distance = sample.totalDistance?.doubleValue(for: HKUnit.mile()) {
+                                if sample.startDate.compare(thisMonday) == .orderedAscending {
+                                    lastWeek += distance
+                                }
+                                else {
+                                    thisWeek += distance
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                handler(lastWeek, thisWeek, sinceLastWorkout, sinceMonday)
+            })
+            
+            // Execute the query
+            healthStore.execute(query)
         })
     }
     

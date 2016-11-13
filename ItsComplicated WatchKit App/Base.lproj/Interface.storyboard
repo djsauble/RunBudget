@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="watchOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11508"/>
     </dependencies>
@@ -11,7 +12,15 @@
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="ItsComplicated_WatchKit_Extension"/>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="ItsComplicated_WatchKit_Extension">
+                    <items>
+                        <button width="1" alignment="left" title="Click me!" id="bgE-sm-0Rv">
+                            <connections>
+                                <action selector="testClick" destination="AgC-eL-Hgc" id="2bv-An-FQG"/>
+                            </connections>
+                        </button>
+                    </items>
+                </controller>
             </objects>
         </scene>
     </scenes>

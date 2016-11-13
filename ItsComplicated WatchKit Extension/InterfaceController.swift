@@ -28,4 +28,22 @@ class InterfaceController: WKInterfaceController {
         super.didDeactivate()
     }
 
+    @IBAction func testClick() {
+        WorkoutData.shared.trendingData(handler: {
+            (lastWeek: Double, thisWeek: Double, sinceMonday: TimeInterval, sinceLastWorkout: TimeInterval) in
+            
+            // Constants
+            let weekInSeconds = Double(60 * 60 * 24 * 7)
+            let percentageElapsed = sinceMonday / weekInSeconds
+            let percentageRemaining = 1 - percentageElapsed
+            
+            // Calculate the number of miles you should run if you ran right now
+            var miles = lastWeek - thisWeek - (percentageRemaining * lastWeek)
+            if (miles < 0) {
+                miles = 0
+            }
+            
+            print(Int(miles))
+        })
+    }
 }

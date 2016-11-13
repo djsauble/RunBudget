@@ -34,17 +34,22 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         // Call the handler with the current timeline entry
         if complication.family == .circularSmall {
-            WorkoutData.shared.getHoursSinceLastWorkout(handler: {
-                (hours: Int?) in
+            WorkoutData.shared.trendingData(handler: {
+                (lastWeek: Double, thisWeek: Double, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
 
                 let template = CLKComplicationTemplateCircularSmallSimpleText()
                 
-                if let hours = hours {
-                    template.textProvider = CLKSimpleTextProvider(text: String(hours))
+                // Constants
+                let weekInSeconds = Double(60 * 60 * 24 * 7)
+                let percentageElapsed = sinceMonday / weekInSeconds
+                let percentageRemaining = 1 - percentageElapsed
+                
+                // Calculate the number of miles you should run if you ran right now
+                var miles = lastWeek - thisWeek - (percentageRemaining * lastWeek)
+                if miles < 0 {
+                    miles = 0
                 }
-                else {
-                    template.textProvider = CLKSimpleTextProvider(text: "∞")
-                }
+                template.textProvider = CLKSimpleTextProvider(text: "\(Int(miles))")
                 
                 let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
                 
