@@ -46,13 +46,39 @@ class WorkoutData {
         })
     }
     
+    // Tell me how far I could run right now
+    public func howFarCouldIRun(handler: @escaping (Int) -> Void) {
+        trendingData(handler: {
+            (lastWeek: Double, thisWeek: Double, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
+            
+            // Constants
+            let primePercentage = 2.0 / 7.0
+            let throughFriday = Double(60 * 60 * 24 * 5)
+            let weekInSeconds = Double(60 * 60 * 24 * 7)
+            var percentageElapsed = throughFriday / weekInSeconds
+            if sinceMonday < throughFriday {
+                percentageElapsed = sinceMonday / weekInSeconds
+            }
+            
+            // Calculate the number of miles you should run if you ran right now
+            var miles: Double = (primePercentage * lastWeek) + (percentageElapsed * lastWeek) - thisWeek
+            if miles < 0.0 {
+                miles = 0.0
+            }
+            
+            handler(Int(miles))
+        })
+    }
+    
+    // MARK: – Private implementation
+    
     // Get trending data from the last two weeks
     //
     // * Miles last week
     // * Miles this week
     // * Time since last workout
     // * Time since Monday
-    public func trendingData(handler: @escaping (Double, Double, TimeInterval, TimeInterval) -> Void) {
+    private func trendingData(handler: @escaping (Double, Double, TimeInterval, TimeInterval) -> Void) {
         authorizeHealthKit(handler: {
             (healthStore: HKHealthStore) in
             
@@ -120,8 +146,6 @@ class WorkoutData {
             healthStore.execute(query)
         })
     }
-    
-    // MARK: – Private implementation
     
     // Get the last workout
     private func lastWorkout(handler: @escaping (HKWorkout?) -> Void) {
