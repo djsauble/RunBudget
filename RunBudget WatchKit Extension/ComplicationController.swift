@@ -74,7 +74,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             else if complication.family == .utilitarianSmall {
                 let template = CLKComplicationTemplateUtilitarianSmallFlat()
                 
-                template.textProvider = CLKSimpleTextProvider(text: "\(rightNow) mi now")
+                template.textProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
                 
                 let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
                 
@@ -83,7 +83,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             else if complication.family == .utilitarianLarge {
                 let template = CLKComplicationTemplateUtilitarianLargeFlat()
                 
-                template.textProvider = CLKSimpleTextProvider(text: "\(rightNow) mi now, \(Int(soFar))/\(Int(thisWeek)) week")
+                template.textProvider = CLKSimpleTextProvider(text: "\(rightNow)/\(Int(soFar))/\(Int(thisWeek)) mi week")
                 
                 let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
                 
