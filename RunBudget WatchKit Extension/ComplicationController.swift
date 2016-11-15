@@ -32,11 +32,12 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     // MARK: - Timeline Population
     
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
-        // Call the handler with the current timeline entry
-        if complication.family == .circularSmall {
-            WorkoutData.shared.howFarCouldIRun(handler: {
-                (miles: Int) in
-                
+        
+        WorkoutData.shared.howFarCouldIRun(handler: {
+            (miles: Int) in
+            
+            // Create the correct type of complication
+            if complication.family == .circularSmall {
                 let template = CLKComplicationTemplateCircularSmallSimpleText()
                 
                 template.textProvider = CLKSimpleTextProvider(text: "\(miles)")
@@ -44,11 +45,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
                 
                 handler(entry)
-            })
-        }
-        else {
-            handler(nil)
-        }
+            }
+            else {
+                handler(nil)
+            }
+        })
     }
     
     func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {

@@ -12,7 +12,17 @@
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension"/>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
+                    <items>
+                        <label alignment="left" text="You should run" id="mJf-NV-XIj"/>
+                        <label alignment="left" text="0 miles" id="Cc7-3N-30l">
+                            <fontDescription key="font" type="system" pointSize="28"/>
+                        </label>
+                    </items>
+                    <connections>
+                        <outlet property="howFarLabel" destination="Cc7-3N-30l" id="xeq-mW-7Ef"/>
+                    </connections>
+                </controller>
             </objects>
         </scene>
     </scenes>

@@ -12,6 +12,8 @@ import Foundation
 
 class InterfaceController: WKInterfaceController {
 
+    @IBOutlet var howFarLabel: WKInterfaceLabel!
+    
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
@@ -21,6 +23,12 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        
+        WorkoutData.shared.howFarCouldIRun(handler: {
+            (miles: Int) in
+            
+            self.howFarLabel.setText("\(miles) miles")
+        })
     }
     
     override func didDeactivate() {
