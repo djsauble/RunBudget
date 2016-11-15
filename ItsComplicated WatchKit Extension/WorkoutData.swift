@@ -52,6 +52,7 @@ class WorkoutData {
             (lastWeek: Double, thisWeek: Double, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
             
             // Constants
+            let targetMileage = lastWeek * 1.1
             let primePercentage = 2.0 / 7.0
             let throughFriday = Double(60 * 60 * 24 * 5)
             let weekInSeconds = Double(60 * 60 * 24 * 7)
@@ -61,7 +62,7 @@ class WorkoutData {
             }
             
             // Calculate the number of miles you should run if you ran right now
-            var miles: Double = (primePercentage * lastWeek) + (percentageElapsed * lastWeek) - thisWeek
+            var miles: Double = (primePercentage * targetMileage) + (percentageElapsed * targetMileage) - thisWeek
             if miles < 0.0 {
                 miles = 0.0
             }

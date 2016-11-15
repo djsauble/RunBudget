@@ -12,15 +12,7 @@
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="ItsComplicated_WatchKit_Extension">
-                    <items>
-                        <button width="1" alignment="left" title="Click me!" id="bgE-sm-0Rv">
-                            <connections>
-                                <action selector="testClick" destination="AgC-eL-Hgc" id="2bv-An-FQG"/>
-                            </connections>
-                        </button>
-                    </items>
-                </controller>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="ItsComplicated_WatchKit_Extension"/>
             </objects>
         </scene>
     </scenes>

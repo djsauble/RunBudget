@@ -27,11 +27,4 @@ class InterfaceController: WKInterfaceController {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
     }
-
-    @IBAction func testClick() {
-        WorkoutData.shared.howFarCouldIRun(handler: {
-            (miles: Int) in
-            print("You could run \(miles) miles right now")
-        })
-    }
 }
