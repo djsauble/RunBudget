@@ -13,6 +13,8 @@ import Foundation
 class InterfaceController: WKInterfaceController {
 
     @IBOutlet var howFarLabel: WKInterfaceLabel!
+    @IBOutlet var thisWeekLabel: WKInterfaceLabel!
+    @IBOutlet var lastWeekLabel: WKInterfaceLabel!
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -28,6 +30,8 @@ class InterfaceController: WKInterfaceController {
             (lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
             
             self.howFarLabel.setText("\(rightNow) miles")
+            self.thisWeekLabel.setText("\(Int(soFar))/\(Int(thisWeek)) miles")
+            self.lastWeekLabel.setText("\(Int(lastWeek)) miles")
         })
     }
     
