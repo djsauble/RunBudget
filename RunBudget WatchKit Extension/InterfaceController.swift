@@ -24,10 +24,10 @@ class InterfaceController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        WorkoutData.shared.howFarCouldIRun(handler: {
-            (miles: Int) in
+        WorkoutData.shared.trendingData(handler: {
+            (lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
             
-            self.howFarLabel.setText("\(miles) miles")
+            self.howFarLabel.setText("\(rightNow) miles")
         })
     }
     
