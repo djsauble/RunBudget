@@ -7,15 +7,24 @@
 //
 
 import WatchKit
+import WatchConnectivity
+import HealthKit
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate {
+class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     
     override init() {
         super.init()
         
-        // Refresh complications and nchedule the next refresh
+        // Refresh complications and schedule the next refresh
         scheduleComplicationRefresh()
         refreshComplications()
+        
+        // Establish a session with the phone
+        if WCSession.isSupported() {
+            let session = WCSession.default()
+            session.delegate = self
+            session.activate()
+        }
     }
 
     func applicationDidFinishLaunching() {
@@ -104,5 +113,30 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
             }
         })
     }
-
+    
+    // MARK: WatchConnectivity
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        if let error = error {
+            print(error.localizedDescription)
+        }
+        else if activationState == .activated {
+            print("Session activated!")
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        DispatchQueue.main.async() {
+            if let unit = applicationContext["unit"] as? String {
+                if unit == "mi" {
+                    UnitStore.shared.unit = HKUnit.mile()
+                }
+                else {
+                    UnitStore.shared.unit = HKUnit.meter()
+                }
+                self.refreshComplications()
+                UnitStore.shared.save()
+            }
+        }
+    }
 }

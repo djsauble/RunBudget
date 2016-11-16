@@ -9,7 +9,6 @@
 import WatchKit
 import Foundation
 
-
 class InterfaceController: WKInterfaceController {
 
     @IBOutlet var howFarLabel: WKInterfaceLabel!
@@ -26,12 +25,21 @@ class InterfaceController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        WorkoutData.shared.trendingData(handler: {
+        let unit = UnitStore.shared.toString()
+        
+        WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
             (lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
             
-            self.howFarLabel.setText("\(rightNow) miles")
-            self.thisWeekLabel.setText("\(Int(soFar))/\(Int(thisWeek)) miles")
-            self.lastWeekLabel.setText("\(Int(lastWeek)) miles")
+            if unit == "mi" {
+                self.howFarLabel.setText("\(rightNow) miles")
+                self.thisWeekLabel.setText("\(Int(soFar))/\(Int(thisWeek)) miles")
+                self.lastWeekLabel.setText("\(Int(lastWeek)) miles")
+            }
+            else {
+                self.howFarLabel.setText("\(rightNow / 1000) km")
+                self.thisWeekLabel.setText("\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) km")
+                self.lastWeekLabel.setText("\(Int(lastWeek / 1000)) km")
+            }
         })
     }
     

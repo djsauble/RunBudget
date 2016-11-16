@@ -14,16 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        // Request HealthKit access
-        authorizeHealthKit(completion: {
-            (success: Bool, error: Error?) in
-            if (success) {
-                print("App got access to health kit data")
-            }
-        })
         return true
     }
 
@@ -47,26 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-
-    // MARK: – HealthStore access
-    
-    // Request authorization
-    func authorizeHealthKit(completion: ((Bool, Error?) -> Void)!) {
-        
-        // App requires HealthKit
-        if !HKHealthStore.isHealthDataAvailable() {
-            return
-        }
-        let healthStore = HKHealthStore()
-        
-        // Set the types you want to read from HK Store
-        let healthKitTypesToRead = Set<HKObjectType>([
-            HKObjectType.workoutType()
-            ])
-        
-        // Request HealthKit authorization
-        healthStore.requestAuthorization(toShare: nil, read: healthKitTypesToRead, completion: completion)
     }
 }
 

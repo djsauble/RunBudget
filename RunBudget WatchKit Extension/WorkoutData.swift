@@ -9,7 +9,10 @@
 import HealthKit
 
 class WorkoutData {
+    
+    // Singleton
     static var shared: WorkoutData = WorkoutData()
+    
     var healthStore: HKHealthStore?
     
     // MARK: – Public interface
@@ -48,12 +51,13 @@ class WorkoutData {
     
     // Get trending data from the last two weeks
     //
-    // * Miles last week
-    // * Miles this week
-    // * Miles I could run now
+    // * Distance last week
+    // * Distance goal this week
+    // * Distance traversed this week
+    // * Distance I could run now
     // * Time since last workout
     // * Time since Monday
-    public func trendingData(handler: @escaping (Double, Double, Double, Int, TimeInterval, TimeInterval) -> Void) {
+    public func trendingData(unit: HKUnit, handler: @escaping (Double, Double, Double, Int, TimeInterval, TimeInterval) -> Void) {
         authorizeHealthKit(handler: {
             (healthStore: HKHealthStore) in
             
@@ -102,7 +106,7 @@ class WorkoutData {
                         
                         // Sum the number of miles in each week
                         for sample in samples {
-                            if let distance = sample.totalDistance?.doubleValue(for: HKUnit.mile()) {
+                            if let distance = sample.totalDistance?.doubleValue(for: unit) {
                                 if sample.startDate.compare(thisMonday) == .orderedAscending {
                                     lastWeek += distance
                                 }
