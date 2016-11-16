@@ -103,19 +103,12 @@ class ViewController: UIViewController, WCSessionDelegate {
         if let error = error {
             print(error.localizedDescription)
         }
-        else if activationState == .activated {
-            print("Session activated")
-        }
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
-        // TODO
-        print("Session became inactive")
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        // TODO
-        print("Session became deactivated")
     }
 }
 

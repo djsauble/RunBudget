@@ -120,9 +120,6 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
         if let error = error {
             print(error.localizedDescription)
         }
-        else if activationState == .activated {
-            print("Session activated!")
-        }
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {

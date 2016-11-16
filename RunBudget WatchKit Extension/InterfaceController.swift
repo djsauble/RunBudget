@@ -32,12 +32,12 @@ class InterfaceController: WKInterfaceController {
             
             if unit == "mi" {
                 self.howFarLabel.setText("\(rightNow) miles")
-                self.thisWeekLabel.setText("\(Int(soFar))/\(Int(thisWeek)) miles")
+                self.thisWeekLabel.setText("\(Int(soFar)) of \(Int(thisWeek)) miles")
                 self.lastWeekLabel.setText("\(Int(lastWeek)) miles")
             }
             else {
                 self.howFarLabel.setText("\(rightNow / 1000) km")
-                self.thisWeekLabel.setText("\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) km")
+                self.thisWeekLabel.setText("\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) km")
                 self.lastWeekLabel.setText("\(Int(lastWeek / 1000)) km")
             }
         })

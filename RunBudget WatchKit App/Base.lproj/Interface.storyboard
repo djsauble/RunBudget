@@ -14,14 +14,20 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="You can run" id="mJf-NV-XIj"/>
-                        <label alignment="left" text="0 miles" id="Cc7-3N-30l">
-                            <fontDescription key="font" type="system" pointSize="28"/>
+                        <label alignment="left" text="Run budget" id="mJf-NV-XIj">
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
                         </label>
-                        <label alignment="left" text="This week" id="wP4-cj-9Ol"/>
-                        <label alignment="left" text="0/0 miles" id="bjF-Bu-WHo"/>
-                        <label alignment="left" text="Last week" id="g2Z-kr-Vx5"/>
-                        <label alignment="left" text="0 miles" id="KEE-4a-mW1"/>
+                        <label alignment="left" text="0 miles" id="Cc7-3N-30l">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <label alignment="left" text="Weekly goal" id="wP4-cj-9Ol"/>
+                        <label alignment="left" text="0 of 0 miles" id="bjF-Bu-WHo">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <label alignment="left" text="Last week" baselineAdjustment="alignCenters" id="g2Z-kr-Vx5"/>
+                        <label alignment="left" text="0 miles" id="KEE-4a-mW1">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
                     </items>
                     <connections>
                         <outlet property="howFarLabel" destination="Cc7-3N-30l" id="xeq-mW-7Ef"/>

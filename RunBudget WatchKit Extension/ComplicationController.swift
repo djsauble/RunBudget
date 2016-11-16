@@ -74,20 +74,20 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 if unit == "mi" {
                     template.headerTextProvider = CLKSimpleTextProvider(text: "\(Int(lastWeek)) mi last week")
                     
-                    template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Week")
-                    template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar))/\(Int(thisWeek)) mi")
+                    template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
+                    template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
                     
-                    template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Now")
-                    template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
+                    template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
+                    template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar)) of \(Int(thisWeek)) mi")
                 }
                 else {
                     template.headerTextProvider = CLKSimpleTextProvider(text: "\(Int(lastWeek / 1000)) km last week")
                     
-                    template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Week")
-                    template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) mi")
+                    template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
+                    template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
                     
-                    template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Now")
-                    template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
+                    template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
+                    template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) mi")
                 }
                 
                 let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
@@ -112,10 +112,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 let template = CLKComplicationTemplateUtilitarianLargeFlat()
                 
                 if unit == "mi" {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow)/\(Int(soFar))/\(Int(thisWeek)) mi week")
+                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow)/\(Int(soFar))/\(Int(thisWeek)) mi goal")
                 }
                 else {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000)/\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) km week")
+                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000)/\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) km goal")
                 }
                 
                 let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
@@ -166,11 +166,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             
             template.headerTextProvider = CLKSimpleTextProvider(text: "— \(unit) last week")
             
-            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Week")
-            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "—/— \(unit)")
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "— \(unit)")
             
-            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Now")
-            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "— \(unit)")
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "— of — \(unit)")
             
             handler(template)
         }
