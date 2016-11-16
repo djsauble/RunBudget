@@ -125,14 +125,16 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         DispatchQueue.main.async() {
             if let unit = applicationContext["unit"] as? String {
-                if unit == "mi" {
+                if unit == "mi" && UnitStore.shared.unit == HKUnit.meter() {
                     UnitStore.shared.unit = HKUnit.mile()
+                    self.refreshComplications()
+                    UnitStore.shared.save()
                 }
-                else {
+                else if unit == "km" && UnitStore.shared.unit == HKUnit.mile() {
                     UnitStore.shared.unit = HKUnit.meter()
+                    self.refreshComplications()
+                    UnitStore.shared.save()
                 }
-                self.refreshComplications()
-                UnitStore.shared.save()
             }
         }
     }
