@@ -158,7 +158,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
             
             template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
-            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) mi")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) km")
         }
         
         return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
