@@ -36,23 +36,23 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         let unit = UnitStore.shared.toString()
         
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
-            (lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
+            (point: WorkoutData.Point) in
             
             // Create the correct type of complication
             if complication.family == .circularSmall {
-                handler(self.getCircularSmallEntry(date: Date(), value: rightNow, unit: unit))
+                handler(self.getCircularSmallEntry(date: Date(), value: point.rightNow, unit: unit))
             }
             else if complication.family == .modularSmall {
-                handler(self.getModularSmallEntry(date: Date(), value: rightNow, unit: unit))
+                handler(self.getModularSmallEntry(date: Date(), value: point.rightNow, unit: unit))
             }
             else if complication.family == .modularLarge {
-                handler(self.getModularLargeEntry(date: Date(), lastWeek: lastWeek, thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
+                handler(self.getModularLargeEntry(date: Date(), lastWeek: point.lastWeek, thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
             }
             else if complication.family == .utilitarianSmall || complication.family == .utilitarianSmallFlat {
-                handler(self.getUtilitarianSmallEntry(date: Date(), value: rightNow, unit: unit))
+                handler(self.getUtilitarianSmallEntry(date: Date(), value: point.rightNow, unit: unit))
             }
             else if complication.family == .utilitarianLarge {
-                handler(self.getUtilitarianLargeEntry(date: Date(), thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
+                handler(self.getUtilitarianLargeEntry(date: Date(), thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
             }
             else {
                 handler(nil)
@@ -69,27 +69,43 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         var entries = [CLKComplicationTimelineEntry]()
         
         WorkoutData.shared.futureData(unit: UnitStore.shared.unit, after: date, limit: limit, handler: {
-            (futureData: [Int]) in
+            (points: [WorkoutData.Point]) in
             // Create the correct type of complication
             if complication.family == .circularSmall {
-                for val in futureData {
+                for point in points {
                     currentHour.addTimeInterval(hourInSeconds)
-                    entries.append(self.getCircularSmallEntry(date: currentHour, value: val, unit: unit))
+                    entries.append(self.getCircularSmallEntry(date: currentHour, value: point.rightNow, unit: unit))
                 }
                 handler(entries)
             }
-            /*else if complication.family == .modularSmall {
-                handler(self.getModularSmallEntry(date: Date(), value: rightNow, unit: unit))
+            else if complication.family == .modularSmall {
+                for point in points {
+                    currentHour.addTimeInterval(hourInSeconds)
+                    entries.append(self.getModularSmallEntry(date: currentHour, value: point.rightNow, unit: unit))
+                }
+                handler(entries)
             }
             else if complication.family == .modularLarge {
-                handler(self.getModularLargeEntry(date: Date(), lastWeek: lastWeek, thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
+                for point in points {
+                    currentHour.addTimeInterval(hourInSeconds)
+                    entries.append(self.getModularLargeEntry(date: currentHour, lastWeek: point.lastWeek, thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
+                }
+                handler(entries)
             }
             else if complication.family == .utilitarianSmall || complication.family == .utilitarianSmallFlat {
-                handler(self.getUtilitarianSmallEntry(date: Date(), value: rightNow, unit: unit))
+                for point in points {
+                    currentHour.addTimeInterval(hourInSeconds)
+                    entries.append(self.getUtilitarianSmallEntry(date: currentHour, value: point.rightNow, unit: unit))
+                }
+                handler(entries)
             }
             else if complication.family == .utilitarianLarge {
-                handler(self.getUtilitarianLargeEntry(date: Date(), thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
-            }*/
+                for point in points {
+                    currentHour.addTimeInterval(hourInSeconds)
+                    entries.append(self.getUtilitarianLargeEntry(date: currentHour, thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
+                }
+                handler(entries)
+            }
             else {
                 handler(nil)
             }

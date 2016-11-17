@@ -28,17 +28,17 @@ class InterfaceController: WKInterfaceController {
         let unit = UnitStore.shared.toString()
         
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
-            (lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
+            (point: WorkoutData.Point) in
             
             if unit == "mi" {
-                self.howFarLabel.setText("\(rightNow) miles")
-                self.thisWeekLabel.setText("\(Int(soFar)) of \(Int(thisWeek)) miles")
-                self.lastWeekLabel.setText("\(Int(lastWeek)) miles")
+                self.howFarLabel.setText("\(point.rightNow) miles")
+                self.thisWeekLabel.setText("\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles")
+                self.lastWeekLabel.setText("\(Int(point.lastWeek)) miles")
             }
             else {
-                self.howFarLabel.setText("\(rightNow / 1000) km")
-                self.thisWeekLabel.setText("\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) km")
-                self.lastWeekLabel.setText("\(Int(lastWeek / 1000)) km")
+                self.howFarLabel.setText("\(point.rightNow / 1000) km")
+                self.thisWeekLabel.setText("\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km")
+                self.lastWeekLabel.setText("\(Int(point.lastWeek / 1000)) km")
             }
         })
     }

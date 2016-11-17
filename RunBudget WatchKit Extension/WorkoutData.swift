@@ -15,6 +15,16 @@ class WorkoutData {
     let throughFriday = Double(60 * 60 * 24 * 5)
     let weekInSeconds = Double(60 * 60 * 24 * 7)
     
+    // Trend point
+    struct Point {
+        var lastWeek: Double
+        var targetMileage: Double
+        var thisWeek: Double
+        var rightNow: Int
+        var sinceLastWorkout: TimeInterval
+        var sinceMonday: TimeInterval
+    }
+    
     // Singleton
     static var shared: WorkoutData = WorkoutData()
     
@@ -58,9 +68,9 @@ class WorkoutData {
     //
     // Returns:
     // * Array of distances you could run in each of the next hours
-    public func futureData(unit: HKUnit, after: Date, limit: Int, handler: @escaping ([Int]) -> Void) {
+    public func futureData(unit: HKUnit, after: Date, limit: Int, handler: @escaping ([Point]) -> Void) {
         trendingData(unit: unit, handler: {
-            (lastWeek: Double, targetMileage: Double, thisWeek: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
+            (point: Point) in
             
             let calendar = Calendar.current
             
@@ -72,11 +82,21 @@ class WorkoutData {
                 }
             }
             let thisMonday = calendar.date(from: components)
-            let targetMileageThisWeek = lastWeek * 1.1
+            
+            // Initialize constants
+            let targetMileageThisWeek = point.lastWeek * 1.1
             let targetMileageNextWeek = targetMileageThisWeek * 1.1
-            var futureBudget = [Int]()
+            var futureBudget = [Point]()
             let hourInSeconds = 60.0 * 60.0
             var offset = after.timeIntervalSince(thisMonday!)
+            
+            // Initialize temp variables for each element of our Point array
+            var lastWeek = 0.0
+            var targetMileage = 0.0
+            var thisWeek = 0.0
+            var rightNow = 0
+            var sinceLastWorkout = 0.0
+            var sinceMonday = 0.0
             
             // Calculate the miles you can run in the future
             for _ in 0..<limit {
@@ -85,16 +105,37 @@ class WorkoutData {
                 var percentageElapsed = 0.0
                 if offset < self.throughFriday {
                     percentageElapsed = offset / self.weekInSeconds
-                    futureBudget.append(Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - thisWeek))
+                    
+                    lastWeek = point.lastWeek
+                    targetMileage = point.targetMileage
+                    thisWeek = point.thisWeek
+                    rightNow = Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - point.thisWeek)
+                    sinceLastWorkout = point.sinceLastWorkout
+                    sinceMonday = offset
                 }
                 else if offset < self.weekInSeconds {
                     percentageElapsed = self.throughFriday / self.weekInSeconds
-                    futureBudget.append(Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - thisWeek))
+                    
+                    lastWeek = point.lastWeek
+                    targetMileage = point.targetMileage
+                    thisWeek = point.thisWeek
+                    rightNow = Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - point.thisWeek)
+                    sinceLastWorkout = point.sinceLastWorkout
+                    sinceMonday = offset
                 }
                 else {
                     percentageElapsed = (offset - self.weekInSeconds) / self.weekInSeconds
-                    futureBudget.append(Int((self.primePercentage * targetMileageNextWeek) + (percentageElapsed * targetMileageNextWeek)))
+                    
+                    lastWeek = point.lastWeek
+                    targetMileage = point.targetMileage
+                    thisWeek = point.thisWeek
+                    rightNow = Int((self.primePercentage * targetMileageNextWeek) + (percentageElapsed * targetMileageNextWeek))
+                    sinceLastWorkout = point.sinceLastWorkout
+                    sinceMonday = offset - self.weekInSeconds
                 }
+                
+                // Append the current point to the array
+                futureBudget.append(Point(lastWeek: lastWeek, targetMileage: targetMileage, thisWeek: thisWeek, rightNow: rightNow, sinceLastWorkout: sinceLastWorkout, sinceMonday: sinceMonday))
                 
                 // Fast forward to the next hour
                 offset += hourInSeconds
@@ -114,7 +155,7 @@ class WorkoutData {
     // * Distance I could run now
     // * Time since last workout
     // * Time since Monday
-    public func trendingData(unit: HKUnit, handler: @escaping (Double, Double, Double, Int, TimeInterval, TimeInterval) -> Void) {
+    public func trendingData(unit: HKUnit, handler: @escaping (Point) -> Void) {
         authorizeHealthKit(handler: {
             (healthStore: HKHealthStore) in
             
@@ -189,7 +230,7 @@ class WorkoutData {
                 let rightNow = Int((self.primePercentage * targetMileage) + (percentageElapsed * targetMileage) - thisWeek)
                 
                 DispatchQueue.main.async() {
-                    handler(lastWeek, targetMileage, thisWeek, rightNow, sinceLastWorkout, sinceMonday)
+                    handler(Point(lastWeek: lastWeek, targetMileage: targetMileage, thisWeek: thisWeek, rightNow: rightNow, sinceLastWorkout: sinceLastWorkout, sinceMonday: sinceMonday))
                 }
             })
             

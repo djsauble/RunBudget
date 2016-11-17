@@ -82,17 +82,17 @@ class ViewController: UIViewController, WCSessionDelegate {
     
     func refreshData() {
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
-            (lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
+            (point: WorkoutData.Point) in
             
             if UnitStore.shared.unit == HKUnit.mile() {
-                self.howFarLabel.text = "\(rightNow) miles"
-                self.thisWeekLabel.text = "\(Int(soFar)) of \(Int(thisWeek)) miles"
-                self.lastWeekLabel.text = "\(Int(lastWeek)) miles"
+                self.howFarLabel.text = "\(point.rightNow) miles"
+                self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles"
+                self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles"
             }
             else {
-                self.howFarLabel.text = "\(Int(rightNow / 1000)) km"
-                self.thisWeekLabel.text = "\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) km"
-                self.lastWeekLabel.text = "\(Int(lastWeek / 1000)) km"
+                self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km"
+                self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
+                self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km"
             }
         })
     }
