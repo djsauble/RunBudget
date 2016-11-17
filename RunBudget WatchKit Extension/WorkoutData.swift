@@ -10,6 +10,11 @@ import HealthKit
 
 class WorkoutData {
     
+    // Constants
+    let primePercentage = 2.0 / 7.0
+    let throughFriday = Double(60 * 60 * 24 * 5)
+    let weekInSeconds = Double(60 * 60 * 24 * 7)
+    
     // Singleton
     static var shared: WorkoutData = WorkoutData()
     
@@ -45,6 +50,58 @@ class WorkoutData {
                 else {
                     handler(nil)
                 }
+            }
+        })
+    }
+    
+    // Get future data
+    //
+    // Returns:
+    // * Array of distances you could run in each of the next hours
+    public func futureData(unit: HKUnit, after: Date, limit: Int, handler: @escaping ([Int]) -> Void) {
+        trendingData(unit: unit, handler: {
+            (lastWeek: Double, targetMileage: Double, thisWeek: Double, rightNow: Int, sinceLastWorkout: TimeInterval, sinceMonday: TimeInterval) in
+            
+            let calendar = Calendar.current
+            
+            // Get the Monday from this week
+            var components = calendar.dateComponents([.year, .month, .day, .weekday], from: Date())
+            if let day = components.day {
+                if let offset = components.weekday {
+                    components.day = day - ((offset - 1) + 6) % 7
+                }
+            }
+            let thisMonday = calendar.date(from: components)
+            let targetMileageThisWeek = lastWeek * 1.1
+            let targetMileageNextWeek = targetMileageThisWeek * 1.1
+            var futureBudget = [Int]()
+            let hourInSeconds = 60.0 * 60.0
+            var offset = after.timeIntervalSince(thisMonday!)
+            
+            // Calculate the miles you can run in the future
+            for _ in 0..<limit {
+                
+                // What percentage of the weekly budget has been allocated?
+                var percentageElapsed = 0.0
+                if offset < self.throughFriday {
+                    percentageElapsed = offset / self.weekInSeconds
+                    futureBudget.append(Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - thisWeek))
+                }
+                else if offset < self.weekInSeconds {
+                    percentageElapsed = self.throughFriday / self.weekInSeconds
+                    futureBudget.append(Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - thisWeek))
+                }
+                else {
+                    percentageElapsed = (offset - self.weekInSeconds) / self.weekInSeconds
+                    futureBudget.append(Int((self.primePercentage * targetMileageNextWeek) + (percentageElapsed * targetMileageNextWeek)))
+                }
+                
+                // Fast forward to the next hour
+                offset += hourInSeconds
+            }
+            
+            DispatchQueue.main.async() {
+                handler(futureBudget)
             }
         })
     }
@@ -118,21 +175,18 @@ class WorkoutData {
                     }
                 }
                 
-                // Constants
+                // Calculate the percentage of the weekly budget that is remaining
                 let targetMileage = lastWeek * 1.1
-                let primePercentage = 2.0 / 7.0
-                let throughFriday = Double(60 * 60 * 24 * 5)
-                let weekInSeconds = Double(60 * 60 * 24 * 7)
                 var percentageElapsed = 0.0
-                if sinceMonday < throughFriday {
-                    percentageElapsed = sinceMonday / weekInSeconds
+                if sinceMonday < self.throughFriday {
+                    percentageElapsed = sinceMonday / self.weekInSeconds
                 }
                 else {
-                    percentageElapsed = throughFriday / weekInSeconds
+                    percentageElapsed = self.throughFriday / self.weekInSeconds
                 }
                 
                 // Calculate the number of miles you could run if you ran right now
-                let rightNow = Int((primePercentage * targetMileage) + (percentageElapsed * targetMileage) - thisWeek)
+                let rightNow = Int((self.primePercentage * targetMileage) + (percentageElapsed * targetMileage) - thisWeek)
                 
                 DispatchQueue.main.async() {
                     handler(lastWeek, targetMileage, thisWeek, rightNow, sinceLastWorkout, sinceMonday)

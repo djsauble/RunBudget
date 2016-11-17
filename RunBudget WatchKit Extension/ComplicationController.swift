@@ -17,11 +17,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }
     
     func getTimelineStartDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-        handler(NSDate() as Date)
+        handler(Date())
     }
     
     func getTimelineEndDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
-        handler(NSDate(timeIntervalSinceNow: (60 * 60 * 1)) as Date)
+        handler(Date(timeIntervalSinceNow: (60 * 60 * 48)))
     }
     
     func getPrivacyBehavior(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationPrivacyBehavior) -> Void) {
@@ -40,87 +40,19 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             
             // Create the correct type of complication
             if complication.family == .circularSmall {
-                let template = CLKComplicationTemplateCircularSmallSimpleText()
-                
-                if unit == "mi" {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow)")
-                }
-                else {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000)")
-                }
-                
-                let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
-                
-                handler(entry)
+                handler(self.getCircularSmallEntry(date: Date(), value: rightNow, unit: unit))
             }
             else if complication.family == .modularSmall {
-                let template = CLKComplicationTemplateModularSmallStackText()
-                
-                if unit == "mi" {
-                    template.line1TextProvider = CLKSimpleTextProvider(text: "\(rightNow)")
-                }
-                else {
-                    template.line1TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000)")
-                }
-                template.line2TextProvider = CLKSimpleTextProvider(text: unit)
-                
-                let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
-                
-                handler(entry)
+                handler(self.getModularSmallEntry(date: Date(), value: rightNow, unit: unit))
             }
             else if complication.family == .modularLarge {
-                let template = CLKComplicationTemplateModularLargeTable()
-                
-                if unit == "mi" {
-                    template.headerTextProvider = CLKSimpleTextProvider(text: "\(Int(lastWeek)) mi last week")
-                    
-                    template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
-                    template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
-                    
-                    template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
-                    template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar)) of \(Int(thisWeek)) mi")
-                }
-                else {
-                    template.headerTextProvider = CLKSimpleTextProvider(text: "\(Int(lastWeek / 1000)) km last week")
-                    
-                    template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
-                    template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
-                    
-                    template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
-                    template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) mi")
-                }
-                
-                let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
-                
-                handler(entry)
+                handler(self.getModularLargeEntry(date: Date(), lastWeek: lastWeek, thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
             }
-            else if complication.family == .utilitarianSmall {
-                let template = CLKComplicationTemplateUtilitarianSmallFlat()
-                
-                if unit == "mi" {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
-                }
-                else {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
-                }
-                
-                let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
-                
-                handler(entry)
+            else if complication.family == .utilitarianSmall || complication.family == .utilitarianSmallFlat {
+                handler(self.getUtilitarianSmallEntry(date: Date(), value: rightNow, unit: unit))
             }
             else if complication.family == .utilitarianLarge {
-                let template = CLKComplicationTemplateUtilitarianLargeFlat()
-                
-                if unit == "mi" {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow)/\(Int(soFar))/\(Int(thisWeek)) mi goal")
-                }
-                else {
-                    template.textProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000)/\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) km goal")
-                }
-                
-                let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
-                
-                handler(entry)
+                handler(self.getUtilitarianLargeEntry(date: Date(), thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
             }
             else {
                 handler(nil)
@@ -128,14 +60,118 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         })
     }
     
-    func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
-        // Call the handler with the timeline entries prior to the given date
-        handler(nil)
+    func getTimelineEntries(for complication: CLKComplication, after date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
+
+        // Get the appropriate units to use
+        let unit = UnitStore.shared.toString()
+        let hourInSeconds = 60.0 * 60.0
+        var currentHour = date
+        var entries = [CLKComplicationTimelineEntry]()
+        
+        WorkoutData.shared.futureData(unit: UnitStore.shared.unit, after: date, limit: limit, handler: {
+            (futureData: [Int]) in
+            // Create the correct type of complication
+            if complication.family == .circularSmall {
+                for val in futureData {
+                    currentHour.addTimeInterval(hourInSeconds)
+                    entries.append(self.getCircularSmallEntry(date: currentHour, value: val, unit: unit))
+                }
+                handler(entries)
+            }
+            /*else if complication.family == .modularSmall {
+                handler(self.getModularSmallEntry(date: Date(), value: rightNow, unit: unit))
+            }
+            else if complication.family == .modularLarge {
+                handler(self.getModularLargeEntry(date: Date(), lastWeek: lastWeek, thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
+            }
+            else if complication.family == .utilitarianSmall || complication.family == .utilitarianSmallFlat {
+                handler(self.getUtilitarianSmallEntry(date: Date(), value: rightNow, unit: unit))
+            }
+            else if complication.family == .utilitarianLarge {
+                handler(self.getUtilitarianLargeEntry(date: Date(), thisWeek: thisWeek, soFar: soFar, rightNow: rightNow, unit: unit))
+            }*/
+            else {
+                handler(nil)
+            }
+        })
     }
     
-    func getTimelineEntries(for complication: CLKComplication, after date: Date, limit: Int, withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
-        // Call the handler with the timeline entries after to the given date
-        handler(nil)
+    func getCircularSmallEntry(date: Date, value: Int, unit: String) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateCircularSmallSimpleText()
+        
+        if unit == "mi" {
+            template.textProvider = CLKSimpleTextProvider(text: "\(value)")
+        }
+        else {
+            template.textProvider = CLKSimpleTextProvider(text: "\(value / 1000)")
+        }
+        
+        return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+    }
+    
+    func getModularSmallEntry(date: Date, value: Int, unit: String) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateModularSmallStackText()
+        
+        if unit == "mi" {
+            template.line1TextProvider = CLKSimpleTextProvider(text: "\(value)")
+        }
+        else {
+            template.line1TextProvider = CLKSimpleTextProvider(text: "\(value / 1000)")
+        }
+        template.line2TextProvider = CLKSimpleTextProvider(text: unit)
+        
+        return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+    }
+    
+    func getModularLargeEntry(date: Date, lastWeek: Double, thisWeek: Double, soFar: Double, rightNow: Int, unit: String) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateModularLargeTable()
+        
+        if unit == "mi" {
+            template.headerTextProvider = CLKSimpleTextProvider(text: "\(Int(lastWeek)) mi last week")
+            
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
+            
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar)) of \(Int(thisWeek)) mi")
+        }
+        else {
+            template.headerTextProvider = CLKSimpleTextProvider(text: "\(Int(lastWeek / 1000)) km last week")
+            
+            template.row1Column1TextProvider = CLKSimpleTextProvider(text: "Now")
+            template.row1Column2TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
+            
+            template.row2Column1TextProvider = CLKSimpleTextProvider(text: "Goal")
+            template.row2Column2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000)) of \(Int(thisWeek / 1000)) mi")
+        }
+        
+        return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+    }
+    
+    func getUtilitarianSmallEntry(date: Date, value: Int, unit: String) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateUtilitarianSmallFlat()
+        
+        if unit == "mi" {
+            template.textProvider = CLKSimpleTextProvider(text: "\(value) mi")
+        }
+        else {
+            template.textProvider = CLKSimpleTextProvider(text: "\(value / 1000) km")
+        }
+        
+        return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+    }
+    
+    func getUtilitarianLargeEntry(date: Date, thisWeek: Double, soFar: Double, rightNow: Int, unit: String) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateUtilitarianLargeFlat()
+        
+        if unit == "mi" {
+            template.textProvider = CLKSimpleTextProvider(text: "\(rightNow)/\(Int(soFar))/\(Int(thisWeek)) mi goal")
+        }
+        else {
+            template.textProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000)/\(Int(soFar / 1000))/\(Int(thisWeek / 1000)) km goal")
+        }
+        
+        return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
     }
     
     // MARK: - Placeholder Templates
