@@ -40,10 +40,14 @@ class Session: NSObject, WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        refreshIfChanged(dict: applicationContext)
+    }
+    
+    func refreshIfChanged(dict: [String:Any]) {
         var refresh = false
-
-        // Check to see if the context has changed
-        if let unit = applicationContext["unit"] as? String {
+        
+        // Check values to see if they differ from what we have
+        if let unit = dict["unit"] as? String {
             if unit == "mi" && UnitStore.shared.unit == HKUnit.meter() {
                 UnitStore.shared.unit = HKUnit.mile()
                 UnitStore.shared.save()
@@ -57,7 +61,7 @@ class Session: NSObject, WCSessionDelegate {
                 refresh = true
             }
         }
-        if let lastWeek = applicationContext["lastWeek"] as? Double {
+        if let lastWeek = dict["lastWeek"] as? Double {
             if lastWeek != TrendCache.shared.lastWeek {
                 TrendCache.shared.lastWeek = lastWeek
                 TrendCache.shared.save()
