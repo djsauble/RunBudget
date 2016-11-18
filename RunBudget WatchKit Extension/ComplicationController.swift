@@ -54,6 +54,9 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             else if complication.family == .utilitarianLarge {
                 handler(self.getUtilitarianLargeEntry(date: Date(), thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
             }
+            else if complication.family == .extraLarge {
+                handler(self.getExtraLargeEntry(date: Date(), thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
+            }
             else {
                 handler(nil)
             }
@@ -103,6 +106,13 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 for point in points {
                     currentHour.addTimeInterval(hourInSeconds)
                     entries.append(self.getUtilitarianLargeEntry(date: currentHour, thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
+                }
+                handler(entries)
+            }
+            else if complication.family == .extraLarge {
+                for point in points {
+                    currentHour.addTimeInterval(hourInSeconds)
+                    entries.append(self.getExtraLargeEntry(date: currentHour, thisWeek: point.targetMileage, soFar: point.thisWeek, rightNow: point.rightNow, unit: unit))
                 }
                 handler(entries)
             }
@@ -190,6 +200,21 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
     }
     
+    func getExtraLargeEntry(date: Date, thisWeek: Double, soFar: Double, rightNow: Int, unit: String) -> CLKComplicationTimelineEntry {
+        let template = CLKComplicationTemplateExtraLargeStackText()
+        
+        if unit == "mi" {
+            template.line1TextProvider = CLKSimpleTextProvider(text: "\(rightNow) mi")
+            template.line2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar))/\(Int(thisWeek))")
+        }
+        else {
+            template.line1TextProvider = CLKSimpleTextProvider(text: "\(rightNow / 1000) km")
+            template.line2TextProvider = CLKSimpleTextProvider(text: "\(Int(soFar / 1000))/\(Int(thisWeek / 1000))")
+        }
+        
+        return CLKComplicationTimelineEntry(date: date, complicationTemplate: template)
+    }
+    
     // MARK: - Placeholder Templates
     
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
@@ -237,6 +262,14 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
             let template = CLKComplicationTemplateUtilitarianLargeFlat()
             
             template.textProvider = CLKSimpleTextProvider(text: "—/—/— \(unit) week")
+            
+            handler(template)
+        }
+        else if complication.family == .extraLarge {
+            let template = CLKComplicationTemplateExtraLargeStackText()
+            
+            template.line1TextProvider = CLKSimpleTextProvider(text: "— \(unit)")
+            template.line2TextProvider = CLKSimpleTextProvider(text: "—/—")
             
             handler(template)
         }
