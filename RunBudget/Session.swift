@@ -55,7 +55,7 @@ class Session: NSObject, WCSessionDelegate {
             }
             else {
                 // Retry send
-                print("Activation state is \(session.activationState), retrying...")
+                print("Session is not active, retrying...")
             }
         }
     }

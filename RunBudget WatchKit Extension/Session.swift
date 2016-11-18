@@ -15,6 +15,8 @@ class Session: NSObject, WCSessionDelegate {
     // Singleton
     static var shared: Session = Session()
     
+    var session: WCSession? = nil
+
     // Callbacks
     var refreshComplications: (() -> Void)? = nil
     
@@ -23,9 +25,9 @@ class Session: NSObject, WCSessionDelegate {
         
         // Establish a session with the phone
         if WCSession.isSupported() {
-            let session = WCSession.default()
-            session.delegate = self
-            session.activate()
+            self.session = WCSession.default()
+            self.session!.delegate = self
+            self.session!.activate()
         }
     }
     
@@ -39,7 +41,7 @@ class Session: NSObject, WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         var refresh = false
-        
+
         // Check to see if the context has changed
         if let unit = applicationContext["unit"] as? String {
             if unit == "mi" && UnitStore.shared.unit == HKUnit.meter() {
