@@ -24,6 +24,10 @@
 		FB8CE85B1DDBD8E8001278AF /* WorkoutData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8A17CA1DD238270030D965 /* WorkoutData.swift */; };
 		FB8CE85D1DDBDD97001278AF /* UnitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CE85C1DDBDD97001278AF /* UnitStore.swift */; };
 		FB8CE85E1DDBDD97001278AF /* UnitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CE85C1DDBDD97001278AF /* UnitStore.swift */; };
+		FBBA83201DDF6DBB00482CCA /* TrendCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */; };
+		FBBA83211DDF6DD100482CCA /* TrendCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */; };
+		FBBA83231DDF70B500482CCA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA83221DDF70B500482CCA /* Session.swift */; };
+		FBBA83251DDF791400482CCA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA83241DDF791400482CCA /* Session.swift */; };
 		FBBC7FA21DD1655E00F2E5E0 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBC7FA11DD1655E00F2E5E0 /* HealthKit.framework */; };
 		FBBC7FA51DD1656E00F2E5E0 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBC7FA41DD1656E00F2E5E0 /* HealthKit.framework */; };
 /* End PBXBuildFile section */
@@ -90,6 +94,9 @@
 		FB2016B31D9DD40900558187 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB8A17CA1DD238270030D965 /* WorkoutData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutData.swift; sourceTree = "<group>"; };
 		FB8CE85C1DDBDD97001278AF /* UnitStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitStore.swift; sourceTree = "<group>"; };
+		FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrendCache.swift; path = ../RunBudget/TrendCache.swift; sourceTree = "<group>"; };
+		FBBA83221DDF70B500482CCA /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		FBBA83241DDF791400482CCA /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		FBBC7F9F1DD1655E00F2E5E0 /* RunBudget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunBudget.entitlements; sourceTree = "<group>"; };
 		FBBC7FA11DD1655E00F2E5E0 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FBBC7FA31DD1656E00F2E5E0 /* RunBudget WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RunBudget WatchKit Extension.entitlements"; sourceTree = "<group>"; };
@@ -148,6 +155,7 @@
 				FB20168F1D9DD40900558187 /* Assets.xcassets */,
 				FB2016911D9DD40900558187 /* LaunchScreen.storyboard */,
 				FB2016941D9DD40900558187 /* Info.plist */,
+				FBBA83241DDF791400482CCA /* Session.swift */,
 			);
 			path = RunBudget;
 			sourceTree = "<group>";
@@ -172,6 +180,8 @@
 				FB2016B11D9DD40900558187 /* Assets.xcassets */,
 				FB2016B31D9DD40900558187 /* Info.plist */,
 				FB8A17CA1DD238270030D965 /* WorkoutData.swift */,
+				FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */,
+				FBBA83221DDF70B500482CCA /* Session.swift */,
 			);
 			path = "RunBudget WatchKit Extension";
 			sourceTree = "<group>";
@@ -337,6 +347,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB20168B1D9DD40900558187 /* ViewController.swift in Sources */,
+				FBBA83201DDF6DBB00482CCA /* TrendCache.swift in Sources */,
+				FBBA83251DDF791400482CCA /* Session.swift in Sources */,
 				FB2016891D9DD40900558187 /* AppDelegate.swift in Sources */,
 				FB8CE85B1DDBD8E8001278AF /* WorkoutData.swift in Sources */,
 				FB8CE85D1DDBDD97001278AF /* UnitStore.swift in Sources */,
@@ -347,8 +359,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBBA83231DDF70B500482CCA /* Session.swift in Sources */,
 				FB2016AE1D9DD40900558187 /* ExtensionDelegate.swift in Sources */,
 				FB8A17CB1DD238270030D965 /* WorkoutData.swift in Sources */,
+				FBBA83211DDF6DD100482CCA /* TrendCache.swift in Sources */,
 				FB8CE85E1DDBDD97001278AF /* UnitStore.swift in Sources */,
 				FB2016AC1D9DD40900558187 /* InterfaceController.swift in Sources */,
 				FB2016B01D9DD40900558187 /* ComplicationController.swift in Sources */,

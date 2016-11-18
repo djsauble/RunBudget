@@ -216,6 +216,17 @@ class WorkoutData {
                     }
                 }
                 
+                // If the earliest sample date is more recent than last Monday, use the cached value instead
+                if healthStore.earliestPermittedSampleDate().compare(lastMonday!) == .orderedDescending {
+                    // Use cached value
+                    lastWeek = TrendCache.shared.lastWeek
+                }
+                else {
+                    // Update the cache
+                    TrendCache.shared.lastWeek = lastWeek
+                    TrendCache.shared.save()
+                }
+                
                 // Calculate the percentage of the weekly budget that is remaining
                 let targetMileage = lastWeek * 1.1
                 var percentageElapsed = 0.0

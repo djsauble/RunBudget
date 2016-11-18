@@ -10,7 +10,7 @@ import UIKit
 import HealthKit
 import WatchConnectivity
 
-class ViewController: UIViewController, WCSessionDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var howFarLabel: UILabel!
     @IBOutlet weak var lastWeekLabel: UILabel!
@@ -26,13 +26,6 @@ class ViewController: UIViewController, WCSessionDelegate {
         
         // Refresh displayed data
         refreshData()
-        
-        // Establish a session with the watch
-        if WCSession.isSupported() {
-            let session = WCSession.default()
-            session.delegate = self
-            session.activate()
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,17 +37,6 @@ class ViewController: UIViewController, WCSessionDelegate {
         if let button = sender as? UISegmentedControl {
             saveUnits(control: button)
             refreshData()
-            
-            // Send the new unit to the watch
-            let session = WCSession.default()
-            if session.activationState == .activated {
-                do {
-                    try session.updateApplicationContext(["unit": UnitStore.shared.toString()])
-                }
-                catch {
-                    print("Could not send application context to the watch")
-                }
-            }
         }
     }
     
@@ -94,21 +76,10 @@ class ViewController: UIViewController, WCSessionDelegate {
                 self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
                 self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km"
             }
+            
+            // Send updated context to the watch
+            Session.shared.sendUpdatedContext()
         })
-    }
-    
-    // MARK: WatchConnectivity
-    
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if let error = error {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
     }
 }
 
