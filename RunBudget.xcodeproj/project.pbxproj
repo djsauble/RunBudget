@@ -92,9 +92,9 @@
 		FB2016AF1D9DD40900558187 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		FB2016B11D9DD40900558187 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB2016B31D9DD40900558187 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FB8A17CA1DD238270030D965 /* WorkoutData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutData.swift; sourceTree = "<group>"; };
-		FB8CE85C1DDBDD97001278AF /* UnitStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitStore.swift; sourceTree = "<group>"; };
-		FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrendCache.swift; path = ../RunBudget/TrendCache.swift; sourceTree = "<group>"; };
+		FB8A17CA1DD238270030D965 /* WorkoutData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkoutData.swift; path = "RunBudget WatchKit Extension/WorkoutData.swift"; sourceTree = "<group>"; };
+		FB8CE85C1DDBDD97001278AF /* UnitStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnitStore.swift; path = RunBudget/UnitStore.swift; sourceTree = "<group>"; };
+		FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrendCache.swift; path = RunBudget/TrendCache.swift; sourceTree = "<group>"; };
 		FBBA83221DDF70B500482CCA /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		FBBA83241DDF791400482CCA /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		FBBC7F9F1DD1655E00F2E5E0 /* RunBudget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunBudget.entitlements; sourceTree = "<group>"; };
@@ -126,6 +126,7 @@
 		FB20167C1D9DD40900558187 = {
 			isa = PBXGroup;
 			children = (
+				FB3320361DDFD0C800893960 /* SharedResources */,
 				FB2016871D9DD40900558187 /* RunBudget */,
 				FB20169B1D9DD40900558187 /* RunBudget WatchKit App */,
 				FB2016AA1D9DD40900558187 /* RunBudget WatchKit Extension */,
@@ -150,7 +151,6 @@
 				FBBC7F9F1DD1655E00F2E5E0 /* RunBudget.entitlements */,
 				FB2016881D9DD40900558187 /* AppDelegate.swift */,
 				FB20168A1D9DD40900558187 /* ViewController.swift */,
-				FB8CE85C1DDBDD97001278AF /* UnitStore.swift */,
 				FB20168C1D9DD40900558187 /* Main.storyboard */,
 				FB20168F1D9DD40900558187 /* Assets.xcassets */,
 				FB2016911D9DD40900558187 /* LaunchScreen.storyboard */,
@@ -179,11 +179,19 @@
 				FB2016AF1D9DD40900558187 /* ComplicationController.swift */,
 				FB2016B11D9DD40900558187 /* Assets.xcassets */,
 				FB2016B31D9DD40900558187 /* Info.plist */,
-				FB8A17CA1DD238270030D965 /* WorkoutData.swift */,
-				FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */,
 				FBBA83221DDF70B500482CCA /* Session.swift */,
 			);
 			path = "RunBudget WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		FB3320361DDFD0C800893960 /* SharedResources */ = {
+			isa = PBXGroup;
+			children = (
+				FB8A17CA1DD238270030D965 /* WorkoutData.swift */,
+				FB8CE85C1DDBDD97001278AF /* UnitStore.swift */,
+				FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */,
+			);
+			name = SharedResources;
 			sourceTree = "<group>";
 		};
 		FBBC7FA01DD1655E00F2E5E0 /* Frameworks */ = {
