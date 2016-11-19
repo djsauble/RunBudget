@@ -45,6 +45,7 @@ class Session: NSObject, WCSessionDelegate {
             if session.activationState == .activated {
                 do {
                     try session.updateApplicationContext([
+                        "date": Date().description, // HACK: Forces updateApplicationContext to fire
                         "unit": UnitStore.shared.toString(),
                         "lastWeek": TrendCache.shared.lastWeek
                     ])
