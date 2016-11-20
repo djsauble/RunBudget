@@ -7,6 +7,7 @@
 //
 
 import ClockKit
+import WatchKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
@@ -30,7 +31,24 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // MARK: - Timeline Population
     
+    // Schedule the next background refresh for an hour from now
+    func scheduleComplicationRefresh() {
+        
+        let nextRefresh = Date().addingTimeInterval(60 * 60)
+        print("Next refresh on \(nextRefresh)")
+        WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefresh, userInfo: nil, scheduledCompletion: {
+            (error: Error?) in
+            
+            if let error = error {
+                fatalError(error.localizedDescription)
+            }
+        })
+    }
+    
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
+        
+        // Schedule the next refresh
+        scheduleComplicationRefresh()
         
         // Get the appropriate units to use
         let unit = UnitStore.shared.toString()

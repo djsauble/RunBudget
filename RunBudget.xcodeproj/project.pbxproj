@@ -20,6 +20,7 @@
 		FB2016AE1D9DD40900558187 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2016AD1D9DD40900558187 /* ExtensionDelegate.swift */; };
 		FB2016B01D9DD40900558187 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2016AF1D9DD40900558187 /* ComplicationController.swift */; };
 		FB2016B21D9DD40900558187 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB2016B11D9DD40900558187 /* Assets.xcassets */; };
+		FB553B711DE0D94400BB6AD4 /* RunBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB553B701DE0D94400BB6AD4 /* RunBudgetTests.swift */; };
 		FB8A17CB1DD238270030D965 /* WorkoutData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8A17CA1DD238270030D965 /* WorkoutData.swift */; };
 		FB8CE85B1DDBD8E8001278AF /* WorkoutData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8A17CA1DD238270030D965 /* WorkoutData.swift */; };
 		FB8CE85D1DDBDD97001278AF /* UnitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CE85C1DDBDD97001278AF /* UnitStore.swift */; };
@@ -46,6 +47,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = FB2016A51D9DD40900558187;
 			remoteInfo = "RunBudget WatchKit Extension";
+		};
+		FB553B731DE0D94400BB6AD4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB20167D1D9DD40900558187 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB2016841D9DD40900558187;
+			remoteInfo = RunBudget;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -92,6 +100,9 @@
 		FB2016AF1D9DD40900558187 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		FB2016B11D9DD40900558187 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB2016B31D9DD40900558187 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB553B6E1DE0D94400BB6AD4 /* RunBudgetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunBudgetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB553B701DE0D94400BB6AD4 /* RunBudgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunBudgetTests.swift; sourceTree = "<group>"; };
+		FB553B721DE0D94400BB6AD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB8A17CA1DD238270030D965 /* WorkoutData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkoutData.swift; path = "RunBudget WatchKit Extension/WorkoutData.swift"; sourceTree = "<group>"; };
 		FB8CE85C1DDBDD97001278AF /* UnitStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnitStore.swift; path = RunBudget/UnitStore.swift; sourceTree = "<group>"; };
 		FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrendCache.swift; path = RunBudget/TrendCache.swift; sourceTree = "<group>"; };
@@ -120,6 +131,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FB553B6B1DE0D94400BB6AD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -130,6 +148,7 @@
 				FB2016871D9DD40900558187 /* RunBudget */,
 				FB20169B1D9DD40900558187 /* RunBudget WatchKit App */,
 				FB2016AA1D9DD40900558187 /* RunBudget WatchKit Extension */,
+				FB553B6F1DE0D94400BB6AD4 /* RunBudgetTests */,
 				FB2016861D9DD40900558187 /* Products */,
 				FBBC7FA01DD1655E00F2E5E0 /* Frameworks */,
 			);
@@ -141,6 +160,7 @@
 				FB2016851D9DD40900558187 /* RunBudget.app */,
 				FB2016971D9DD40900558187 /* RunBudget WatchKit App.app */,
 				FB2016A61D9DD40900558187 /* RunBudget WatchKit Extension.appex */,
+				FB553B6E1DE0D94400BB6AD4 /* RunBudgetTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,6 +212,15 @@
 				FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */,
 			);
 			name = SharedResources;
+			sourceTree = "<group>";
+		};
+		FB553B6F1DE0D94400BB6AD4 /* RunBudgetTests */ = {
+			isa = PBXGroup;
+			children = (
+				FB553B701DE0D94400BB6AD4 /* RunBudgetTests.swift */,
+				FB553B721DE0D94400BB6AD4 /* Info.plist */,
+			);
+			path = RunBudgetTests;
 			sourceTree = "<group>";
 		};
 		FBBC7FA01DD1655E00F2E5E0 /* Frameworks */ = {
@@ -259,13 +288,31 @@
 			productReference = FB2016A61D9DD40900558187 /* RunBudget WatchKit Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
+		FB553B6D1DE0D94400BB6AD4 /* RunBudgetTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB553B771DE0D94400BB6AD4 /* Build configuration list for PBXNativeTarget "RunBudgetTests" */;
+			buildPhases = (
+				FB553B6A1DE0D94400BB6AD4 /* Sources */,
+				FB553B6B1DE0D94400BB6AD4 /* Frameworks */,
+				FB553B6C1DE0D94400BB6AD4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB553B741DE0D94400BB6AD4 /* PBXTargetDependency */,
+			);
+			name = RunBudgetTests;
+			productName = RunBudgetTests;
+			productReference = FB553B6E1DE0D94400BB6AD4 /* RunBudgetTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		FB20167D1D9DD40900558187 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0800;
+				LastSwiftUpdateCheck = 0810;
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Daniel Sauble";
 				TargetAttributes = {
@@ -297,6 +344,11 @@
 							};
 						};
 					};
+					FB553B6D1DE0D94400BB6AD4 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = FB2016841D9DD40900558187;
+					};
 				};
 			};
 			buildConfigurationList = FB2016801D9DD40900558187 /* Build configuration list for PBXProject "RunBudget" */;
@@ -315,6 +367,7 @@
 				FB2016841D9DD40900558187 /* RunBudget */,
 				FB2016961D9DD40900558187 /* RunBudget WatchKit App */,
 				FB2016A51D9DD40900558187 /* RunBudget WatchKit Extension */,
+				FB553B6D1DE0D94400BB6AD4 /* RunBudgetTests */,
 			);
 		};
 /* End PBXProject section */
@@ -344,6 +397,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB2016B21D9DD40900558187 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB553B6C1DE0D94400BB6AD4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +437,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FB553B6A1DE0D94400BB6AD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB553B711DE0D94400BB6AD4 /* RunBudgetTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -389,6 +457,11 @@
 			isa = PBXTargetDependency;
 			target = FB2016A51D9DD40900558187 /* RunBudget WatchKit Extension */;
 			targetProxy = FB2016A81D9DD40900558187 /* PBXContainerItemProxy */;
+		};
+		FB553B741DE0D94400BB6AD4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB2016841D9DD40900558187 /* RunBudget */;
+			targetProxy = FB553B731DE0D94400BB6AD4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -617,6 +690,35 @@
 			};
 			name = Release;
 		};
+		FB553B751DE0D94400BB6AD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = RunBudgetTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielsauble.RunBudgetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RunBudget.app/RunBudget";
+			};
+			name = Debug;
+		};
+		FB553B761DE0D94400BB6AD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = RunBudgetTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielsauble.RunBudgetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RunBudget.app/RunBudget";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -652,6 +754,15 @@
 			buildConfigurations = (
 				FB2016BF1D9DD40900558187 /* Debug */,
 				FB2016C01D9DD40900558187 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB553B771DE0D94400BB6AD4 /* Build configuration list for PBXNativeTarget "RunBudgetTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB553B751DE0D94400BB6AD4 /* Debug */,
+				FB553B761DE0D94400BB6AD4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

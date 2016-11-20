@@ -32,38 +32,6 @@ class WorkoutData {
     
     // MARK: – Public interface
     
-    // Fetch the number of hours that have elapsed since the last workout
-    public func getHoursSinceLastWorkout(handler: @escaping (Int?) -> Void) -> Void {
-        lastWorkout(handler: {
-            (workout: HKWorkout?) in
-            
-            DispatchQueue.main.async() {
-                if let workout = workout {
-                    handler(Int(Date().timeIntervalSince(workout.endDate) / 60 / 60))
-                }
-                else {
-                    handler(nil)
-                }
-            }
-        })
-    }
-
-    // Get date of the last workout
-    public func dateOfLastWorkout(handler: @escaping (Date?) -> Void) {
-        lastWorkout(handler: {
-            (workout: HKWorkout?) in
-            
-            DispatchQueue.main.async() {
-                if let workout = workout {
-                    handler(workout.startDate)
-                }
-                else {
-                    handler(nil)
-                }
-            }
-        })
-    }
-    
     // Get future data
     //
     // Returns:
@@ -184,64 +152,72 @@ class WorkoutData {
             
             // Construct the query
             let query = HKSampleQuery(sampleType: quantityType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: [], resultsHandler: {
-                (query, samples, error) in
+                (query: HKSampleQuery, samples: [HKSample]?, error: Error?) in
                 
-                var lastWeek = 0.0
-                var thisWeek = 0.0
-                var sinceMonday = 0.0
-                var sinceLastWorkout = 0.0
-                if let thisMonday = thisMonday {
-                    
-                    // Get the time elapsed since this Monday
-                    sinceMonday = Date().timeIntervalSince(thisMonday)
-                    
-                    if let samples = samples as? [HKWorkout] {
+                if error == nil {
+                    var lastWeek = 0.0
+                    var thisWeek = 0.0
+                    var sinceMonday = 0.0
+                    var sinceLastWorkout = 0.0
+                    if let thisMonday = thisMonday {
                         
-                        // Get the time elapsed since the last workout
-                        if let lastWorkout = samples.last {
-                            sinceLastWorkout = Date().timeIntervalSince(lastWorkout.endDate)
-                        }
+                        // Get the time elapsed since this Monday
+                        sinceMonday = Date().timeIntervalSince(thisMonday)
                         
-                        // Sum the number of miles in each week
-                        for sample in samples {
-                            if let distance = sample.totalDistance?.doubleValue(for: unit) {
-                                if sample.startDate.compare(thisMonday) == .orderedAscending {
-                                    lastWeek += distance
-                                }
-                                else {
-                                    thisWeek += distance
+                        if let samples = samples as? [HKWorkout] {
+                            
+                            // Get the time elapsed since the last workout
+                            if let lastWorkout = samples.last {
+                                sinceLastWorkout = Date().timeIntervalSince(lastWorkout.endDate)
+                            }
+                            
+                            // Sum the number of miles in each week
+                            for sample in samples {
+                                if let distance = sample.totalDistance?.doubleValue(for: unit) {
+                                    if sample.startDate.compare(thisMonday) == .orderedAscending {
+                                        lastWeek += distance
+                                    }
+                                    else {
+                                        thisWeek += distance
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                
-                // If the earliest sample date is more recent than last Monday, use the cached value instead
-                if healthStore.earliestPermittedSampleDate().compare(lastMonday!) == .orderedDescending {
-                    // Use cached value
-                    lastWeek = TrendCache.shared.lastWeek
+                    
+                    // If the earliest sample date is more recent than last Monday, use the cached value instead
+                    if healthStore.earliestPermittedSampleDate().compare(lastMonday!) == .orderedDescending {
+                        // Use cached value
+                        lastWeek = TrendCache.shared.lastWeek
+                    }
+                    else {
+                        // Update the cache
+                        TrendCache.shared.lastWeek = lastWeek
+                        TrendCache.shared.save()
+                    }
+                    
+                    // Calculate the percentage of the weekly budget that is remaining
+                    let targetMileage = lastWeek * 1.1
+                    var percentageElapsed = 0.0
+                    if sinceMonday < self.throughFriday {
+                        percentageElapsed = sinceMonday / self.weekInSeconds
+                    }
+                    else {
+                        percentageElapsed = self.throughFriday / self.weekInSeconds
+                    }
+                    
+                    // Calculate the number of miles you could run if you ran right now
+                    let rightNow = Int((self.primePercentage * targetMileage) + (percentageElapsed * targetMileage) - thisWeek)
+                    
+                    DispatchQueue.main.async() {
+                        handler(Point(lastWeek: lastWeek, targetMileage: targetMileage, thisWeek: thisWeek, rightNow: rightNow, sinceLastWorkout: sinceLastWorkout, sinceMonday: sinceMonday))
+                    }
                 }
                 else {
-                    // Update the cache
-                    TrendCache.shared.lastWeek = lastWeek
-                    TrendCache.shared.save()
-                }
-                
-                // Calculate the percentage of the weekly budget that is remaining
-                let targetMileage = lastWeek * 1.1
-                var percentageElapsed = 0.0
-                if sinceMonday < self.throughFriday {
-                    percentageElapsed = sinceMonday / self.weekInSeconds
-                }
-                else {
-                    percentageElapsed = self.throughFriday / self.weekInSeconds
-                }
-                
-                // Calculate the number of miles you could run if you ran right now
-                let rightNow = Int((self.primePercentage * targetMileage) + (percentageElapsed * targetMileage) - thisWeek)
-                
-                DispatchQueue.main.async() {
-                    handler(Point(lastWeek: lastWeek, targetMileage: targetMileage, thisWeek: thisWeek, rightNow: rightNow, sinceLastWorkout: sinceLastWorkout, sinceMonday: sinceMonday))
+                    // There was an error fetching data from HKHealthStore
+                    DispatchQueue.main.async() {
+                        handler(Point(lastWeek: 0, targetMileage: 0, thisWeek: 0, rightNow: 0, sinceLastWorkout: 0, sinceMonday: 0))
+                    }
                 }
             })
             
@@ -251,42 +227,6 @@ class WorkoutData {
     }
     
     // MARK: – Private implementation
-    
-    // Get the last workout
-    private func lastWorkout(handler: @escaping (HKWorkout?) -> Void) {
-        authorizeHealthKit(handler: {
-            (healthStore: HKHealthStore) in
-            
-            // Seven days ago
-            let startDate = Date(timeIntervalSinceNow: -(60 * 60 * 24 * 7))
-            
-            // Workouts
-            let quantityType = HKObjectType.workoutType()
-            
-            // Only fetch running workouts
-            let runningPredicate = HKQuery.predicateForWorkouts(with: .running)
-            let agePredicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [])
-            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [runningPredicate, agePredicate])
-            
-            // Get the most recent workout
-            let query = HKSampleQuery(sampleType: quantityType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
-                query, results, error in
-                
-                guard let samples = results as? [HKWorkout] else {
-                    fatalError("An error occurred fetching the list of workouts")
-                }
-                
-                if let last = samples.last {
-                    handler(last)
-                }
-                else {
-                    handler(nil)
-                }
-            }
-            
-            healthStore.execute(query)
-        })
-    }
     
     // Request authorization
     private func authorizeHealthKit(handler: @escaping (HKHealthStore) -> Void) {

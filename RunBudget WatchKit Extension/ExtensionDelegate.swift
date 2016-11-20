@@ -14,10 +14,6 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     override init() {
         super.init()
         
-        // Refresh complications and schedule the next refresh
-        scheduleComplicationRefresh()
-        refreshComplications()
-        
         // Start sessions
         Session.shared.refreshComplications = refreshComplications
     }
@@ -42,7 +38,6 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
             switch task {
             case let backgroundTask as WKApplicationRefreshBackgroundTask:
                 // Be sure to complete the background task once you’re done.
-                self.scheduleComplicationRefresh()
                 self.refreshComplications()
                 backgroundTask.setTaskCompleted()
             case let snapshotTask as WKSnapshotRefreshBackgroundTask:
@@ -69,43 +64,5 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
                 server.reloadTimeline(for: complication)
             }
         }
-    }
-    
-    func scheduleComplicationRefresh() {
-        WorkoutData.shared.dateOfLastWorkout(handler: {
-            (date: Date?) in
-            
-            if let date = date {
-                
-                let now = Date()
-                
-                let calendar = Calendar.current
-                
-                // What is the current offset in seconds from the top of the hour
-                let nowOffset = (calendar.component(.minute, from: now) * 60) + (calendar.component(.second, from: now))
-                
-                // What was the offset of the last workout in seconds from the top of the hour
-                let dateOffset = (calendar.component(.minute, from: date) * 60) + (calendar.component(.second, from: date))
-                
-                // When should the next update be?
-                var nextRefresh: Date
-                if nowOffset < dateOffset {
-                    nextRefresh = Date(timeIntervalSinceNow: TimeInterval(dateOffset - nowOffset))
-                }
-                else {
-                    nextRefresh = Date(timeIntervalSinceNow: TimeInterval((60 * 60) - (nowOffset - dateOffset)))
-                }
-                print("Next refresh on \(nextRefresh)")
-                
-                // Do the thing
-                WKExtension.shared().scheduleBackgroundRefresh(withPreferredDate: nextRefresh, userInfo: nil, scheduledCompletion: {
-                    (error: Error?) in
-                    
-                    if let error = error {
-                        fatalError(error.localizedDescription)
-                    }
-                })
-            }
-        })
     }
 }
