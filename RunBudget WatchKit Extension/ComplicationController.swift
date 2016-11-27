@@ -29,10 +29,17 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         handler(.hideOnLockScreen)
     }
     
+    // Using this because there seems to be no reliable way to refresh via background tasks when the app has not launched
+    func getNextRequestedUpdateDate(handler: @escaping (Date?) -> Void) {
+        let nextRefresh = Date().addingTimeInterval(60 * 60)
+        print("Next refresh on \(nextRefresh)")
+        handler(nextRefresh)
+    }
+    
     // MARK: - Timeline Population
     
     // Schedule the next background refresh for an hour from now
-    func scheduleComplicationRefresh() {
+    /*func scheduleComplicationRefresh() {
         
         let nextRefresh = Date().addingTimeInterval(60 * 60)
         print("Next refresh on \(nextRefresh)")
@@ -43,12 +50,12 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
                 fatalError(error.localizedDescription)
             }
         })
-    }
+    }*/
     
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         
         // Schedule the next refresh
-        scheduleComplicationRefresh()
+        /*scheduleComplicationRefresh()*/
         
         // Get the appropriate units to use
         let unit = UnitStore.shared.toString()

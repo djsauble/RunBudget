@@ -15,7 +15,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         super.init()
         
         // Start sessions
-        Session.shared.refreshComplications = refreshComplications
+        //Session.shared.refreshComplications = refreshComplications
     }
 
     func applicationDidFinishLaunching() {
@@ -31,7 +31,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         // Use this method to pause ongoing tasks, disable timers, etc.
     }
 
-    func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
+    /*func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
         // Sent when the system needs to launch the application in the background to process tasks. Tasks arrive in a set, so loop through and process each one.
         for task in backgroundTasks {
             // Use a switch statement to check the task type
@@ -54,9 +54,9 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
                 task.setTaskCompleted()
             }
         }
-    }
+    }*/
     
-    func refreshComplications() {
+    /*func refreshComplications() {
         print("Refreshing complications")
         let server = CLKComplicationServer.sharedInstance()
         if let activeComplications = server.activeComplications {
@@ -64,5 +64,5 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
                 server.reloadTimeline(for: complication)
             }
         }
-    }
+    }*/
 }
