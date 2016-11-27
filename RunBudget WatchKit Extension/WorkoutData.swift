@@ -94,9 +94,9 @@ class WorkoutData {
                 else {
                     percentageElapsed = (offset - self.weekInSeconds) / self.weekInSeconds
                     
-                    lastWeek = point.lastWeek
-                    targetMileage = point.targetMileage
-                    thisWeek = point.thisWeek
+                    lastWeek = point.thisWeek
+                    targetMileage = targetMileageNextWeek
+                    thisWeek = 0.0
                     rightNow = Int((self.primePercentage * targetMileageNextWeek) + (percentageElapsed * targetMileageNextWeek))
                     sinceLastWorkout = point.sinceLastWorkout
                     sinceMonday = offset - self.weekInSeconds
