@@ -31,7 +31,19 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     // Using this because there seems to be no reliable way to refresh via background tasks when the app has not launched
     func getNextRequestedUpdateDate(handler: @escaping (Date?) -> Void) {
-        let nextRefresh = Date().addingTimeInterval(60 * 60)
+        
+        let calendar = Calendar.current
+        
+        // Get the current hour
+        var components = calendar.dateComponents([.year, .month, .day, .hour], from: Date())
+        
+        // Fast forward to the next hour
+        if let hour = components.hour {
+            components.hour = hour + 1
+        }
+        
+        // Refresh at the top of the next hour
+        let nextRefresh = calendar.date(from: components)
         print("Next refresh on \(nextRefresh)")
         handler(nextRefresh)
     }
