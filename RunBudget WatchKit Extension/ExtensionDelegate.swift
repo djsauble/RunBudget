@@ -10,13 +10,6 @@ import WatchKit
 import HealthKit
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
-    
-    override init() {
-        super.init()
-        
-        // Start sessions
-        //Session.shared.refreshComplications = refreshComplications
-    }
 
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.

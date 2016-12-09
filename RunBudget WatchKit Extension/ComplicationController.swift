@@ -48,6 +48,15 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         handler(nextRefresh)
     }
     
+    func requestedUpdateDidBegin() {
+        let server = CLKComplicationServer.sharedInstance()
+        if let activeComplications = server.activeComplications {
+            for complication in activeComplications {
+                server.reloadTimeline(for: complication)
+            }
+        }
+    }
+    
     // MARK: - Timeline Population
     
     // Schedule the next background refresh for an hour from now
@@ -65,7 +74,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }*/
     
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
-        
+
         // Schedule the next refresh
         /*scheduleComplicationRefresh()*/
         
