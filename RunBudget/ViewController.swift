@@ -64,17 +64,31 @@ class ViewController: UIViewController {
     
     func refreshData() {
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
-            (point: WorkoutData.Point) in
+            (point: WorkoutData.Point?) in
             
-            if UnitStore.shared.unit == HKUnit.mile() {
-                self.howFarLabel.text = "\(point.rightNow) miles"
-                self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles"
-                self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles"
+            if let point = point {
+                if UnitStore.shared.unit == HKUnit.mile() {
+                    self.howFarLabel.text = "\(point.rightNow) miles"
+                    self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles"
+                    self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles"
+                }
+                else {
+                    self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km"
+                    self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
+                    self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km"
+                }
             }
             else {
-                self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km"
-                self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
-                self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km"
+                if UnitStore.shared.unit == HKUnit.mile() {
+                    self.howFarLabel.text = "— miles"
+                    self.thisWeekLabel.text = "— of — miles"
+                    self.lastWeekLabel.text = "— miles"
+                }
+                else {
+                    self.howFarLabel.text = "— km"
+                    self.thisWeekLabel.text = "— of — km"
+                    self.lastWeekLabel.text = "— km"
+                }
             }
             
             // Send updated context to the watch

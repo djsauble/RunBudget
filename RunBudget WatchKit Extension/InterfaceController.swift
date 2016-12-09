@@ -28,17 +28,31 @@ class InterfaceController: WKInterfaceController {
         let unit = UnitStore.shared.toString()
         
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
-            (point: WorkoutData.Point) in
+            (point: WorkoutData.Point?) in
             
-            if unit == "mi" {
-                self.howFarLabel.setText("\(point.rightNow) miles")
-                self.thisWeekLabel.setText("\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles")
-                self.lastWeekLabel.setText("\(Int(point.lastWeek)) miles")
+            if let point = point {
+                if unit == "mi" {
+                    self.howFarLabel.setText("\(point.rightNow) miles")
+                    self.thisWeekLabel.setText("\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles")
+                    self.lastWeekLabel.setText("\(Int(point.lastWeek)) miles")
+                }
+                else {
+                    self.howFarLabel.setText("\(point.rightNow / 1000) km")
+                    self.thisWeekLabel.setText("\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km")
+                    self.lastWeekLabel.setText("\(Int(point.lastWeek / 1000)) km")
+                }
             }
             else {
-                self.howFarLabel.setText("\(point.rightNow / 1000) km")
-                self.thisWeekLabel.setText("\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km")
-                self.lastWeekLabel.setText("\(Int(point.lastWeek / 1000)) km")
+                if unit == "mi" {
+                    self.howFarLabel.setText("— miles")
+                    self.thisWeekLabel.setText("— of — miles")
+                    self.lastWeekLabel.setText("— miles")
+                }
+                else {
+                    self.howFarLabel.setText("— km")
+                    self.thisWeekLabel.setText("— of — km")
+                    self.lastWeekLabel.setText("— km")
+                }
             }
         })
     }

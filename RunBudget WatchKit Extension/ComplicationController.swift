@@ -11,6 +11,43 @@ import WatchKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
+    var currentPoint: WorkoutData.Point? = nil
+    var futurePoints: [WorkoutData.Point]? = nil
+    
+    // Fetch data
+    
+    func getTrendingData(handler: @escaping (WorkoutData.Point) -> Void) {
+        
+        // Get the current complication value
+        WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
+            (point: WorkoutData.Point?) in
+            
+            if let point = point {
+                self.currentPoint = point
+                handler(point)
+            }
+            else if let point = self.currentPoint {
+                handler(point)
+            }
+        })
+    }
+    
+    // Persist the timeline values and pass them off to whoever requested them
+    func getFutureData(after: Date, limit: Int, handler: @escaping ([WorkoutData.Point]) -> Void) {
+    
+        WorkoutData.shared.futureData(unit: UnitStore.shared.unit, after: after, limit: limit, handler: {
+            (points: [WorkoutData.Point]?) in
+            
+            if let points = points {
+                self.futurePoints = points
+                handler(points)
+            }
+            else if let points = self.futurePoints {
+                handler(points)
+            }
+        })
+    }
+    
     // MARK: - Timeline Configuration
     
     func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
@@ -26,7 +63,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }
     
     func getPrivacyBehavior(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationPrivacyBehavior) -> Void) {
-        handler(.hideOnLockScreen)
+        handler(.showOnLockScreen)
     }
     
     // Using this because there seems to be no reliable way to refresh via background tasks when the app has not launched
@@ -81,7 +118,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         // Get the appropriate units to use
         let unit = UnitStore.shared.toString()
         
-        WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
+        getTrendingData(handler: {
             (point: WorkoutData.Point) in
             
             // Create the correct type of complication
@@ -117,7 +154,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         var currentHour = date
         var entries = [CLKComplicationTimelineEntry]()
         
-        WorkoutData.shared.futureData(unit: UnitStore.shared.unit, after: date, limit: limit, handler: {
+        getFutureData(after: date, limit: limit, handler: {
             (points: [WorkoutData.Point]) in
             // Create the correct type of complication
             if complication.family == .circularSmall {

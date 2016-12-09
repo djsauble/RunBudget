@@ -36,81 +36,89 @@ class WorkoutData {
     //
     // Returns:
     // * Array of distances you could run in each of the next hours
-    public func futureData(unit: HKUnit, after: Date, limit: Int, handler: @escaping ([Point]) -> Void) {
+    public func futureData(unit: HKUnit, after: Date, limit: Int, handler: @escaping ([Point]?) -> Void) {
         trendingData(unit: unit, handler: {
-            (point: Point) in
+            (point: Point?) in
             
-            let calendar = Calendar.current
+            if let point = point {
             
-            // Get the Monday from this week
-            var components = calendar.dateComponents([.year, .month, .day, .weekday], from: Date())
-            if let day = components.day {
-                if let offset = components.weekday {
-                    components.day = day - ((offset - 1) + 6) % 7
+                let calendar = Calendar.current
+                
+                // Get the Monday from this week
+                var components = calendar.dateComponents([.year, .month, .day, .weekday], from: Date())
+                if let day = components.day {
+                    if let offset = components.weekday {
+                        components.day = day - ((offset - 1) + 6) % 7
+                    }
+                }
+                let thisMonday = calendar.date(from: components)
+                
+                // Initialize constants
+                let targetMileageThisWeek = point.lastWeek * 1.1
+                let targetMileageNextWeek = targetMileageThisWeek * 1.1
+                var futureBudget = [Point]()
+                let hourInSeconds = 60.0 * 60.0
+                var offset = after.timeIntervalSince(thisMonday!)
+                
+                // Initialize temp variables for each element of our Point array
+                var lastWeek = 0.0
+                var targetMileage = 0.0
+                var thisWeek = 0.0
+                var rightNow = 0
+                var sinceLastWorkout = 0.0
+                var sinceMonday = 0.0
+                
+                // Calculate the miles you can run in the future
+                for _ in 0..<limit {
+                    
+                    // What percentage of the weekly budget has been allocated?
+                    var percentageElapsed = 0.0
+                    if offset < self.throughFriday {
+                        percentageElapsed = offset / self.weekInSeconds
+                        
+                        lastWeek = point.lastWeek
+                        targetMileage = point.targetMileage
+                        thisWeek = point.thisWeek
+                        rightNow = Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - point.thisWeek)
+                        sinceLastWorkout = point.sinceLastWorkout
+                        sinceMonday = offset
+                    }
+                    else if offset < self.weekInSeconds {
+                        percentageElapsed = self.throughFriday / self.weekInSeconds
+                        
+                        lastWeek = point.lastWeek
+                        targetMileage = point.targetMileage
+                        thisWeek = point.thisWeek
+                        rightNow = Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - point.thisWeek)
+                        sinceLastWorkout = point.sinceLastWorkout
+                        sinceMonday = offset
+                    }
+                    else {
+                        percentageElapsed = (offset - self.weekInSeconds) / self.weekInSeconds
+                        
+                        lastWeek = point.thisWeek
+                        targetMileage = targetMileageNextWeek
+                        thisWeek = 0.0
+                        rightNow = Int((self.primePercentage * targetMileageNextWeek) + (percentageElapsed * targetMileageNextWeek))
+                        sinceLastWorkout = point.sinceLastWorkout
+                        sinceMonday = offset - self.weekInSeconds
+                    }
+                    
+                    // Append the current point to the array
+                    futureBudget.append(Point(lastWeek: lastWeek, targetMileage: targetMileage, thisWeek: thisWeek, rightNow: rightNow, sinceLastWorkout: sinceLastWorkout, sinceMonday: sinceMonday))
+                    
+                    // Fast forward to the next hour
+                    offset += hourInSeconds
+                }
+                
+                DispatchQueue.main.async() {
+                    handler(futureBudget)
                 }
             }
-            let thisMonday = calendar.date(from: components)
-            
-            // Initialize constants
-            let targetMileageThisWeek = point.lastWeek * 1.1
-            let targetMileageNextWeek = targetMileageThisWeek * 1.1
-            var futureBudget = [Point]()
-            let hourInSeconds = 60.0 * 60.0
-            var offset = after.timeIntervalSince(thisMonday!)
-            
-            // Initialize temp variables for each element of our Point array
-            var lastWeek = 0.0
-            var targetMileage = 0.0
-            var thisWeek = 0.0
-            var rightNow = 0
-            var sinceLastWorkout = 0.0
-            var sinceMonday = 0.0
-            
-            // Calculate the miles you can run in the future
-            for _ in 0..<limit {
-                
-                // What percentage of the weekly budget has been allocated?
-                var percentageElapsed = 0.0
-                if offset < self.throughFriday {
-                    percentageElapsed = offset / self.weekInSeconds
-                    
-                    lastWeek = point.lastWeek
-                    targetMileage = point.targetMileage
-                    thisWeek = point.thisWeek
-                    rightNow = Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - point.thisWeek)
-                    sinceLastWorkout = point.sinceLastWorkout
-                    sinceMonday = offset
+            else {
+                DispatchQueue.main.async() {
+                    handler(nil)
                 }
-                else if offset < self.weekInSeconds {
-                    percentageElapsed = self.throughFriday / self.weekInSeconds
-                    
-                    lastWeek = point.lastWeek
-                    targetMileage = point.targetMileage
-                    thisWeek = point.thisWeek
-                    rightNow = Int((self.primePercentage * targetMileageThisWeek) + (percentageElapsed * targetMileageThisWeek) - point.thisWeek)
-                    sinceLastWorkout = point.sinceLastWorkout
-                    sinceMonday = offset
-                }
-                else {
-                    percentageElapsed = (offset - self.weekInSeconds) / self.weekInSeconds
-                    
-                    lastWeek = point.thisWeek
-                    targetMileage = targetMileageNextWeek
-                    thisWeek = 0.0
-                    rightNow = Int((self.primePercentage * targetMileageNextWeek) + (percentageElapsed * targetMileageNextWeek))
-                    sinceLastWorkout = point.sinceLastWorkout
-                    sinceMonday = offset - self.weekInSeconds
-                }
-                
-                // Append the current point to the array
-                futureBudget.append(Point(lastWeek: lastWeek, targetMileage: targetMileage, thisWeek: thisWeek, rightNow: rightNow, sinceLastWorkout: sinceLastWorkout, sinceMonday: sinceMonday))
-                
-                // Fast forward to the next hour
-                offset += hourInSeconds
-            }
-            
-            DispatchQueue.main.async() {
-                handler(futureBudget)
             }
         })
     }
@@ -123,7 +131,7 @@ class WorkoutData {
     // * Distance I could run now
     // * Time since last workout
     // * Time since Monday
-    public func trendingData(unit: HKUnit, handler: @escaping (Point) -> Void) {
+    public func trendingData(unit: HKUnit, handler: @escaping (Point?) -> Void) {
         authorizeHealthKit(handler: {
             (healthStore: HKHealthStore) in
             
@@ -216,7 +224,7 @@ class WorkoutData {
                 else {
                     // There was an error fetching data from HKHealthStore
                     DispatchQueue.main.async() {
-                        handler(Point(lastWeek: 0, targetMileage: 0, thisWeek: 0, rightNow: 0, sinceLastWorkout: 0, sinceMonday: 0))
+                        handler(nil)
                     }
                 }
             })
