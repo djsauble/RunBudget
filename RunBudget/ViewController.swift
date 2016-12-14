@@ -16,11 +16,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var lastWeekLabel: UILabel!
     @IBOutlet weak var thisWeekLabel: UILabel!
     @IBOutlet weak var unitControl: UISegmentedControl!
+    @IBOutlet weak var trendControl: TrendControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+
         // Load the last persisted unit
         loadUnits()
         
@@ -63,6 +64,8 @@ class ViewController: UIViewController {
     }
     
     func refreshData() {
+        
+        // Update text
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
             (point: WorkoutData.Point?) in
             
@@ -93,6 +96,15 @@ class ViewController: UIViewController {
             
             // Send updated context to the watch
             Session.shared.sendUpdatedContext()
+        })
+        
+        // Update graphs
+        WorkoutData.shared.historicData(handler: {
+            (weeks: [Double]?) in
+
+            if let weeks = weeks {
+                self.trendControl.trend = weeks
+            }
         })
     }
 }

@@ -25,6 +25,7 @@
 		FB8CE85B1DDBD8E8001278AF /* WorkoutData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8A17CA1DD238270030D965 /* WorkoutData.swift */; };
 		FB8CE85D1DDBDD97001278AF /* UnitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CE85C1DDBDD97001278AF /* UnitStore.swift */; };
 		FB8CE85E1DDBDD97001278AF /* UnitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8CE85C1DDBDD97001278AF /* UnitStore.swift */; };
+		FBAD62B11E01045D00B9CD78 /* TrendControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD62B01E01045D00B9CD78 /* TrendControl.swift */; };
 		FBBA83201DDF6DBB00482CCA /* TrendCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */; };
 		FBBA83211DDF6DD100482CCA /* TrendCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */; };
 		FBBA83231DDF70B500482CCA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBA83221DDF70B500482CCA /* Session.swift */; };
@@ -105,6 +106,7 @@
 		FB553B721DE0D94400BB6AD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB8A17CA1DD238270030D965 /* WorkoutData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WorkoutData.swift; path = "RunBudget WatchKit Extension/WorkoutData.swift"; sourceTree = "<group>"; };
 		FB8CE85C1DDBDD97001278AF /* UnitStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnitStore.swift; path = RunBudget/UnitStore.swift; sourceTree = "<group>"; };
+		FBAD62B01E01045D00B9CD78 /* TrendControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrendControl.swift; sourceTree = "<group>"; };
 		FBBA831F1DDF6DBB00482CCA /* TrendCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrendCache.swift; path = RunBudget/TrendCache.swift; sourceTree = "<group>"; };
 		FBBA83221DDF70B500482CCA /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		FBBA83241DDF791400482CCA /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				FB2016911D9DD40900558187 /* LaunchScreen.storyboard */,
 				FB2016941D9DD40900558187 /* Info.plist */,
 				FBBA83241DDF791400482CCA /* Session.swift */,
+				FBAD62B01E01045D00B9CD78 /* TrendControl.swift */,
 			);
 			path = RunBudget;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				FBBA83201DDF6DBB00482CCA /* TrendCache.swift in Sources */,
 				FBBA83251DDF791400482CCA /* Session.swift in Sources */,
 				FB2016891D9DD40900558187 /* AppDelegate.swift in Sources */,
+				FBAD62B11E01045D00B9CD78 /* TrendControl.swift in Sources */,
 				FB8CE85B1DDBD8E8001278AF /* WorkoutData.swift in Sources */,
 				FB8CE85D1DDBDD97001278AF /* UnitStore.swift in Sources */,
 			);

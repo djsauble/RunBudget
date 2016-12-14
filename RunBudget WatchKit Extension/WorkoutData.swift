@@ -123,6 +123,52 @@ class WorkoutData {
         })
     }
     
+    // Get historic data from the last six months
+    public func historicData(handler: @escaping ([Double]?) -> Void) {
+        authorizeHealthKit(handler: {
+            (healthStore: HKHealthStore) in
+            
+            let calendar = Calendar.current
+            
+            // Set the anchor date to Monday at 12:00 a.m.
+            var components = calendar.dateComponents([.day, .month, .year, .weekday], from: Date())
+            if let day = components.day {
+                if let offset = components.weekday {
+                    components.day = day - ((offset - 1) + 6) % 7
+                }
+            }
+
+            guard let anchorDate = calendar.date(from: components) else {
+                fatalError("*** Unable to create a valid date from the given components ***")
+            }
+
+            let quantityType = HKObjectType.workoutType()
+            
+            // Set the start date to 26 weeks before the anchor week
+            let startDate = calendar.date(byAdding: .day, value: -7 * 26, to: anchorDate)
+            let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [])
+
+            // Set up the query
+            let query = HKSampleQuery(sampleType: quantityType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
+                query, results, error in
+                
+                guard let samples = results as? [HKWorkout] else {
+                    fatalError("An error occurred fetching the list of workouts")
+                }
+
+                let weeks = self.aggregateIntoWeeks(samples: samples)
+                
+                // Call the callback on the main thread
+                DispatchQueue.main.async() {
+                    handler(weeks)
+                }
+            }
+            
+            // Run the query
+            healthStore.execute(query)
+        })
+    }
+    
     // Get trending data from the last two weeks
     //
     // * Distance last week
@@ -263,5 +309,47 @@ class WorkoutData {
                 }
             })
         }
+    }
+    
+    // Aggregate sample data by weeks
+    private func aggregateIntoWeeks(samples: [HKWorkout]) -> [Double] {
+        
+        let calendar = Calendar.current
+        
+        // Get the Monday from this week
+        var components = calendar.dateComponents([.year, .month, .day, .weekday], from: Date())
+        if let day = components.day {
+            if let offset = components.weekday {
+                components.day = day - ((offset - 1) + 6) % 7
+            }
+        }
+        let day0 = calendar.date(from: components)
+        
+        // Loop variables
+        var current = day0
+        var distanceSum = 0.0
+
+        // Reverse the sample array so we process newest values first
+        let input = samples.reversed()
+        var output = [Double]()
+        
+        for sample in input {
+
+            // If the next sample is older than the current week, append the current sum to the output array
+            if current!.compare(sample.startDate) == .orderedDescending {
+                output.append(distanceSum)
+                distanceSum = sample.totalDistance?.doubleValue(for: HKUnit.mile()) ?? 0.0
+                current = calendar.date(byAdding: .day, value: -7, to: current!)
+                continue
+            }
+
+            // Add to the sum
+            distanceSum += sample.totalDistance?.doubleValue(for: HKUnit.mile()) ?? 0.0
+        }
+        
+        // Add the final sample to the output array
+        output.append(distanceSum)
+        
+        return output.reversed()
     }
 }

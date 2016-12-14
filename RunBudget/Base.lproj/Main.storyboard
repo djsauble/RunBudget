@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="Ohe-GS-EDu">
-                                <rect key="frame" x="14" y="40" width="343" height="358"/>
+                                <rect key="frame" x="14" y="40" width="343" height="443"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="top" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="78k-66-uOo">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="29"/>
@@ -83,7 +83,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="wAj-du-XTG">
-                                        <rect key="frame" x="0.0" y="276" width="343" height="81.5"/>
+                                        <rect key="frame" x="0.0" y="276" width="343" height="166.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last week" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ZV-KC-8Er">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -103,6 +103,13 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1J4-Th-9f7" customClass="TrendControl" customModule="RunBudget" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="86.5" width="343" height="80"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="80" id="gxw-8W-jSl"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -119,6 +126,7 @@
                         <outlet property="howFarLabel" destination="gQ7-2S-PP8" id="cTP-s8-onY"/>
                         <outlet property="lastWeekLabel" destination="YON-Pn-hfc" id="QSv-8D-XBr"/>
                         <outlet property="thisWeekLabel" destination="bEn-36-FL4" id="z8N-4E-Z8k"/>
+                        <outlet property="trendControl" destination="1J4-Th-9f7" id="DyP-fB-Rrb"/>
                         <outlet property="unitControl" destination="78k-66-uOo" id="aTS-I9-Gwg"/>
                     </connections>
                 </viewController>
