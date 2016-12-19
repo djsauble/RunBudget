@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="Ohe-GS-EDu">
-                                <rect key="frame" x="14" y="40" width="343" height="377"/>
+                                <rect key="frame" x="14" y="40" width="343" height="350"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="top" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="78k-66-uOo">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="29"/>
@@ -36,7 +36,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="erh-Oh-FDy">
-                                        <rect key="frame" x="0.0" y="51" width="343" height="97.5"/>
+                                        <rect key="frame" x="0.0" y="51" width="343" height="76"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Run budget" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ONQ-Dt-DOS">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -50,17 +50,17 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XtQ-VY-okZ">
-                                                <rect key="frame" x="0.0" y="51" width="343" height="46.5"/>
-                                                <string key="text">Your run budget is the number of miles you can run now. This number resets on Monday, slowly increases during the week, and goes down every time you run.</string>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3va-BF-nkk" customClass="WeekControl" customModule="RunBudget" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="51" width="343" height="25"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="e5l-Hu-xEl"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="91K-Ji-hwg">
-                                        <rect key="frame" x="0.0" y="171.5" width="343" height="81.5"/>
+                                        <rect key="frame" x="0.0" y="150" width="343" height="76"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weekly goal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dv1-dS-leR">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -74,16 +74,17 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your weekly goal is 110% of the distance you ran last week, and represents the max amount you should run this week." lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy7-mS-oaA">
-                                                <rect key="frame" x="0.0" y="51" width="343" height="30.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fb0-Ws-HW5" customClass="WeekControl" customModule="RunBudget" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="51" width="343" height="25"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="dVm-ze-tKx"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="wAj-du-XTG">
-                                        <rect key="frame" x="0.0" y="276" width="343" height="101"/>
+                                        <rect key="frame" x="0.0" y="249" width="343" height="101"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last week" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ZV-KC-8Er">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -119,6 +120,8 @@
                     <connections>
                         <outlet property="howFarLabel" destination="gQ7-2S-PP8" id="cTP-s8-onY"/>
                         <outlet property="lastWeekLabel" destination="YON-Pn-hfc" id="QSv-8D-XBr"/>
+                        <outlet property="runBudgetControl" destination="3va-BF-nkk" id="Dpl-Mc-a92"/>
+                        <outlet property="thisWeekControl" destination="Fb0-Ws-HW5" id="sRk-VR-K0z"/>
                         <outlet property="thisWeekLabel" destination="bEn-36-FL4" id="z8N-4E-Z8k"/>
                         <outlet property="trendControl" destination="1J4-Th-9f7" id="DyP-fB-Rrb"/>
                         <outlet property="unitControl" destination="78k-66-uOo" id="aTS-I9-Gwg"/>
