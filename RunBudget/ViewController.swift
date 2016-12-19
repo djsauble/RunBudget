@@ -103,7 +103,7 @@ class ViewController: UIViewController {
             (weeks: [Double]?) in
 
             if let weeks = weeks {
-                self.trendControl.trend = weeks
+                self.trendControl.workoutTrend = weeks
             }
         })
     }

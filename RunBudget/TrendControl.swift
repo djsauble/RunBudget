@@ -14,19 +14,6 @@ class TrendControl: UIView {
     
     let maxWeeks = 26
     
-    var trend = [Double]() {
-        didSet {
-            // Pad with zeroes
-            while trend.count < maxWeeks {
-                trend.insert(0, at: 0)
-            }
-            // Remove extra weeks
-            while trend.count > maxWeeks {
-                trend.remove(at: 0)
-            }
-            render()
-        }
-    }
     var workoutTrend = [Double]() {
         didSet {
             // Pad with zeroes
@@ -40,7 +27,6 @@ class TrendControl: UIView {
             render()
         }
     }
-    var trendViews = [UIView?]()
     var workoutViews = [UIView?]()
     
     // MARK: Initialization
@@ -51,29 +37,17 @@ class TrendControl: UIView {
     
     override func layoutSubviews() {
         
-        guard self.trend.count > 0 else {
+        guard self.workoutTrend.count > 0 else {
             return
         }
         
         let spacing = 1
-        let barWidth = (frame.size.width / CGFloat(self.trend.count)) - CGFloat(spacing)
+        let barWidth = (frame.size.width / CGFloat(self.workoutTrend.count)) - CGFloat(spacing)
         
         // Find the max bar height
-        if let max = self.trend.max() {
+        if let max = self.workoutTrend.max() {
             
             // Add trend bars
-            for (index, bar) in trendViews.enumerated() {
-                if bar == nil {
-                    continue
-                }
-                let barHeight = CGFloat(Double(frame.size.height) * self.trend[index] / max)
-                let x = CGFloat(index) * (barWidth + CGFloat(spacing))
-                let y = frame.size.height - barHeight
-                let barFrame = CGRect(x: x, y: y, width: barWidth, height: barHeight)
-                bar!.frame = barFrame
-            }
-            
-            // Add workout bars
             for (index, bar) in workoutViews.enumerated() {
                 if bar == nil {
                     continue
@@ -88,12 +62,6 @@ class TrendControl: UIView {
     }
     
     func render() {
-        // Remove the existing trend bars
-        trendViews.forEach({
-            (view: UIView?) in
-            view?.removeFromSuperview()
-        })
-        trendViews = []
         
         // Remove the existing workout bars
         workoutViews.forEach({
@@ -102,23 +70,18 @@ class TrendControl: UIView {
         })
         workoutViews = []
         
-        if let max = self.trend.max() {
+        if let max = self.workoutTrend.max() {
             
             // Add the new trend bars
-            for val in self.trend {
-                let view: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 100 * val / max))
+            for i in 0..<self.workoutTrend.count {
+                let view: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 100 * self.workoutTrend[i] / max))
                 
-                view!.backgroundColor = UIColor.red
-                
-                self.trendViews += [view]
-                self.addSubview(view!)
-            }
-            
-            // Add the new workout bars
-            for val in self.workoutTrend {
-                let view: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 100 * val / max))
-                
-                view!.backgroundColor = UIColor.blue
+                if i < self.workoutTrend.count - 1 {
+                    view!.backgroundColor = UIColor.gray
+                }
+                else {
+                    view!.backgroundColor = UIColor.blue
+                }
                 
                 self.workoutViews += [view]
                 self.addSubview(view!)
