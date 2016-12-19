@@ -146,7 +146,7 @@ class WorkoutData {
             
             // Set the start date to 26 weeks before the anchor week
             let startDate = calendar.date(byAdding: .day, value: -7 * 26, to: anchorDate)
-            let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [])
+            let predicate = HKQuery.predicateForSamples(withStart: startDate, end: anchorDate, options: [])
 
             // Set up the query
             let query = HKSampleQuery(sampleType: quantityType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
@@ -316,11 +316,11 @@ class WorkoutData {
         
         let calendar = Calendar.current
         
-        // Get the Monday from this week
+        // Get the Monday from last week
         var components = calendar.dateComponents([.year, .month, .day, .weekday], from: Date())
         if let day = components.day {
             if let offset = components.weekday {
-                components.day = day - ((offset - 1) + 6) % 7
+                components.day = (day - ((offset - 1) + 6) % 7) - 7
             }
         }
         let day0 = calendar.date(from: components)
