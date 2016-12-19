@@ -74,20 +74,20 @@ class ViewController: UIViewController {
             if let point = point {
                 if UnitStore.shared.unit == HKUnit.mile() {
                     self.howFarLabel.text = "\(point.rightNow) miles"
-                    self.thisWeekLabel.text = "\(Double(Int(point.thisWeek * 10.0)) / 10.0) of \(Double(Int(point.targetMileage * 10.0)) / 10.0) miles"
+                    self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles"
                     self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles"
                 }
                 else {
-                    self.howFarLabel.text = "\(Double(Int(point.rightNow / 1000 * 10)) / 10.0) km"
-                    self.thisWeekLabel.text = "\(Double(Int(point.thisWeek / 1000 * 10)) / 10.0) of \(Double(Int(point.targetMileage / 1000 * 10)) / 10.0) km"
-                    self.lastWeekLabel.text = "\(Double(Int(point.lastWeek / 1000 * 10)) / 10.0) km"
+                    self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km"
+                    self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
+                    self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km"
                 }
                 
-                self.thisWeekControl.total = point.targetMileage
-                self.thisWeekControl.soFar = point.thisWeek
+                self.thisWeekControl.total = Double(Int(point.targetMileage))
+                self.thisWeekControl.soFar = Double(Int(point.thisWeek))
                 
-                self.runBudgetControl.total = point.targetMileage
-                self.runBudgetControl.soFar = point.thisWeek + Double(point.rightNow)
+                self.runBudgetControl.total = Double(Int(point.targetMileage))
+                self.runBudgetControl.soFar = Double(Int(point.thisWeek + Double(point.rightNow)))
             }
             else {
                 if UnitStore.shared.unit == HKUnit.mile() {
