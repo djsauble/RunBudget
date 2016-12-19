@@ -12,16 +12,8 @@ class WeekControl: UIView {
     
     // MARK: Properties
     
-    var soFar: Double = 0.0 {
-        didSet {
-            render()
-        }
-    }
-    var total: Double = 0.0 {
-        didSet {
-            render()
-        }
-    }
+    var soFar: Double = 0.0
+    var total: Double = 0.0
     var soFarView: UIView? = nil
     var remainingView: UIView? = nil
     

@@ -50,7 +50,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3va-BF-nkk" customClass="WeekControl" customModule="RunBudget" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3va-BF-nkk" customClass="BudgetControl" customModule="RunBudget" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="51" width="343" height="25"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>

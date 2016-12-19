@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var unitControl: UISegmentedControl!
     @IBOutlet weak var trendControl: TrendControl!
     @IBOutlet weak var thisWeekControl: WeekControl!
-    @IBOutlet weak var runBudgetControl: WeekControl!
+    @IBOutlet weak var runBudgetControl: BudgetControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,30 +75,33 @@ class ViewController: UIViewController {
                 if UnitStore.shared.unit == HKUnit.mile() {
                     self.howFarLabel.text = "\(point.rightNow) miles"
                     self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles"
-                    self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles"
+                    self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles last week"
                 }
                 else {
                     self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km"
                     self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
-                    self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km"
+                    self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km last week"
                 }
                 
-                self.thisWeekControl.total = Double(Int(point.targetMileage))
                 self.thisWeekControl.soFar = Double(Int(point.thisWeek))
+                self.thisWeekControl.total = Double(Int(point.targetMileage))
+                self.thisWeekControl.render()
                 
+                self.runBudgetControl.soFar = Double(Int(point.thisWeek))
+                self.runBudgetControl.budget = Double(Int(point.rightNow))
                 self.runBudgetControl.total = Double(Int(point.targetMileage))
-                self.runBudgetControl.soFar = Double(Int(point.thisWeek + Double(point.rightNow)))
+                self.runBudgetControl.render()
             }
             else {
                 if UnitStore.shared.unit == HKUnit.mile() {
                     self.howFarLabel.text = "— miles"
                     self.thisWeekLabel.text = "— of — miles"
-                    self.lastWeekLabel.text = "— miles"
+                    self.lastWeekLabel.text = "— miles last week"
                 }
                 else {
                     self.howFarLabel.text = "— km"
                     self.thisWeekLabel.text = "— of — km"
-                    self.lastWeekLabel.text = "— km"
+                    self.lastWeekLabel.text = "— km last week"
                 }
             }
             
