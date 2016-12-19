@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="Ohe-GS-EDu">
-                                <rect key="frame" x="14" y="40" width="343" height="350"/>
+                                <rect key="frame" x="14" y="40" width="343" height="409"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="top" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="78k-66-uOo">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="29"/>
@@ -36,7 +36,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="erh-Oh-FDy">
-                                        <rect key="frame" x="0.0" y="51" width="343" height="76"/>
+                                        <rect key="frame" x="0.0" y="51" width="343" height="95.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Run budget" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ONQ-Dt-DOS">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -57,10 +57,16 @@
                                                     <constraint firstAttribute="height" constant="25" id="e5l-Hu-xEl"/>
                                                 </constraints>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The distance you could run if you ran right now." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gkW-oo-oys">
+                                                <rect key="frame" x="0.0" y="81" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="91K-Ji-hwg">
-                                        <rect key="frame" x="0.0" y="150" width="343" height="76"/>
+                                        <rect key="frame" x="0.0" y="169.5" width="343" height="95.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weekly progress" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dv1-dS-leR">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -81,10 +87,16 @@
                                                     <constraint firstAttribute="height" constant="25" id="dVm-ze-tKx"/>
                                                 </constraints>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is 110% of the distance you ran last week." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Trj-oQ-bVd">
+                                                <rect key="frame" x="0.0" y="81" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="wAj-du-XTG">
-                                        <rect key="frame" x="0.0" y="249" width="343" height="101"/>
+                                        <rect key="frame" x="0.0" y="288" width="343" height="120.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last six months" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ZV-KC-8Er">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
@@ -105,6 +117,12 @@
                                                     <constraint firstAttribute="height" constant="50" id="gxw-8W-jSl"/>
                                                 </constraints>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Try to keep your weekly progress as smooth as possible." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NNf-lb-GXL">
+                                                <rect key="frame" x="0.0" y="106" width="343" height="14.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                 </subviews>
