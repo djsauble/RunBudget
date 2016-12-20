@@ -138,7 +138,6 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
                         self.distance += sample.quantity.doubleValue(for: self.unit ?? HKUnit.mile())
                     }
                 }
-                print(self.distance)
                 
                 // Update the interface
                 self.updateInterface()
