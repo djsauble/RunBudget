@@ -97,18 +97,22 @@ class WeekControl: UIView {
         }
 
         // Add the new bars
-        let soFarView: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: bar1Width, height: barHeight))
-        if let bar = soFarView {
-            bar.backgroundColor = UIColor.blue
-            self.soFarView = bar
-            self.addSubview(bar)
+        if bar1Width > 0.0 {
+            let soFarView: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: bar1Width, height: barHeight))
+            if let bar = soFarView {
+                bar.backgroundColor = UIColor.blue
+                self.soFarView = bar
+                self.addSubview(bar)
+            }
         }
         
-        let remainingView: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: bar2Width, height: barHeight))
-        if let bar = remainingView {
-            bar.backgroundColor = UIColor.gray
-            self.remainingView = bar
-            self.addSubview(bar)
+        if bar2Width > 0.0 {
+            let remainingView: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: bar2Width, height: barHeight))
+            if let bar = remainingView {
+                bar.backgroundColor = UIColor.gray
+                self.remainingView = bar
+                self.addSubview(bar)
+            }
         }
     
         // Perform layout
