@@ -295,6 +295,7 @@ class WorkoutData {
             
             // Set the types you want to read from HKHealthStore
             let healthKitTypesToRead = Set<HKObjectType>([
+                HKObjectType.workoutType(),
                 HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
                 ])
             
