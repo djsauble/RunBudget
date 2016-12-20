@@ -72,6 +72,10 @@ class TrendControl: UIView {
         
         if let max = self.workoutTrend.max() {
             
+            guard max > 0 else {
+                return
+            }
+            
             // Add the new trend bars
             for i in 0..<self.workoutTrend.count {
                 let view: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 100 * self.workoutTrend[i] / max))
