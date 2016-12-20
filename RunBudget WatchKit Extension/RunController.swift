@@ -74,6 +74,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             healthStore.end(workoutSession)
         }
         
+        // Dismiss the controller
         self.dismiss()
     }
     

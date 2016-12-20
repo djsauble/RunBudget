@@ -169,6 +169,40 @@ class WorkoutData {
         })
     }
     
+    // Listen for new workouts, trigger trending data updates
+    public func listenForTrendingData(handler: @escaping () -> Void) {
+        authorizeHealthKit(handler: {
+            (healthStore: HKHealthStore) in
+            
+            // Object predicate
+            
+            let datePredicate = HKQuery.predicateForSamples(withStart: Date(), end: nil, options: .strictStartDate)
+            let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
+            let queryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, devicePredicate])
+            
+            let sampleType = HKSampleType.workoutType()
+            
+            // Handle updates
+            
+            let updateHandler: (HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Void = {
+                query, samples, deletedObjects, queryAnchor, error in
+
+                // Trigger the handler
+                handler()
+            }
+            
+            let query = HKAnchoredObjectQuery(type: sampleType,
+                                              predicate: queryPredicate,
+                                              anchor: nil,
+                                              limit: HKObjectQueryNoLimit,
+                                              resultsHandler: updateHandler)
+            
+            query.updateHandler = updateHandler
+            
+            healthStore.execute(query)
+        })
+    }
+    
     // Get trending data from the last two weeks
     //
     // * Distance last week

@@ -22,12 +22,32 @@ class InterfaceController: WKInterfaceController {
         super.awake(withContext: context)
         
         // Configure interface objects here.
+        
+        // Start listening for new workouts
+        WorkoutData.shared.listenForTrendingData(handler: self.updateInterface)
     }
     
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
-
+    }
+    
+    override func didDeactivate() {
+        // This method is called when watch view controller is no longer visible
+        super.didDeactivate()
+    }
+    
+    override func contextForSegue(withIdentifier segueIdentifier: String) -> Any? {
+        if segueIdentifier == "startRun" {
+            if let runBudget = runBudget {
+                return runBudget
+            }
+        }
+        
+        return nil
+    }
+    
+    func updateInterface() {
         let unit = UnitStore.shared.toString()
         
         WorkoutData.shared.trendingData(unit: UnitStore.shared.unit, handler: {
@@ -59,21 +79,14 @@ class InterfaceController: WKInterfaceController {
                     self.lastWeekLabel.setText("— km")
                 }
             }
-        })
-    }
-    
-    override func didDeactivate() {
-        // This method is called when watch view controller is no longer visible
-        super.didDeactivate()
-    }
-    
-    override func contextForSegue(withIdentifier segueIdentifier: String) -> Any? {
-        if segueIdentifier == "startRun" {
-            if let runBudget = runBudget {
-                return runBudget
+            
+            // Refresh the complications
+            let server = CLKComplicationServer.sharedInstance()
+            if let activeComplications = server.activeComplications {
+                for complication in activeComplications {
+                    server.reloadTimeline(for: complication)
+                }
             }
-        }
-        
-        return nil
+        })
     }
 }
