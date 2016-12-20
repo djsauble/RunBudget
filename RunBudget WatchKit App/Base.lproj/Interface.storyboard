@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="11762" systemVersion="16B2555" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11508"/>
     </dependencies>
     <scenes>
@@ -28,6 +28,12 @@
                         <label alignment="left" text="0 miles" id="KEE-4a-mW1">
                             <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
                         </label>
+                        <button width="1" alignment="left" title="Go for a run" id="eMz-AU-C0f">
+                            <color key="backgroundColor" red="0.066666666669999999" green="0.40000000000000002" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <segue destination="cfF-Zh-XBx" kind="modal" identifier="startRun" id="2rV-Yj-SRm"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="howFarLabel" destination="Cc7-3N-30l" id="xeq-mW-7Ef"/>
@@ -36,6 +42,30 @@
                     </connections>
                 </controller>
             </objects>
+        </scene>
+        <!--Run Controller-->
+        <scene sceneID="S58-i3-NdS">
+            <objects>
+                <controller id="cfF-Zh-XBx" customClass="RunController" customModule="RunBudget_WatchKit_Extension">
+                    <items>
+                        <label alignment="left" text="Run budget" id="jAt-x2-8YR"/>
+                        <label alignment="left" text="0 miles" id="8zr-Do-X2s">
+                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                        </label>
+                        <button width="1" alignment="left" title="Pause run" id="ait-2u-wBW"/>
+                        <button width="1" alignment="left" title="Finish run" id="H1g-cO-LEZ">
+                            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="finishRun" destination="cfF-Zh-XBx" id="Gdz-hI-Dgd"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <connections>
+                        <outlet property="runBudgetLabel" destination="8zr-Do-X2s" id="ZZY-fo-aGp"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="34" y="426"/>
         </scene>
     </scenes>
 </document>
