@@ -280,10 +280,8 @@ class WorkoutData {
         })
     }
     
-    // MARK: – Private implementation
-    
     // Request authorization
-    private func authorizeHealthKit(handler: @escaping (HKHealthStore) -> Void) {
+    public func authorizeHealthKit(handler: @escaping (HKHealthStore) -> Void) {
         
         if let healthStore = self.healthStore {
             handler(healthStore)
@@ -294,12 +292,17 @@ class WorkoutData {
                 return
             }
             let healthStore = HKHealthStore()
-        
-            // Set the types you want to read from HK Store
+            
+            // Set the types you want to read from HKHealthStore
             let healthKitTypesToRead = Set<HKObjectType>([
-                HKObjectType.workoutType()
-            ])
-        
+                HKObjectType.workoutType(),
+                HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
+                ])
+            
+            // Set the types you want to share with HKHealthStore
+            //let healthKitTypesToShare = Set<HKSampleType>([
+            //    ])
+            
             // Request HealthKit authorization
             healthStore.requestAuthorization(toShare: nil, read: healthKitTypesToRead, completion: {
                 (success: Bool, error: Error?) in
@@ -310,6 +313,8 @@ class WorkoutData {
             })
         }
     }
+    
+    // MARK: – Private implementation
     
     // Aggregate sample data by weeks
     private func aggregateIntoWeeks(samples: [HKWorkout]) -> [Double] {
