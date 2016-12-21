@@ -126,10 +126,12 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             }
             
             // Update progress bar
-            if let scene = runBudgetSprite.scene as? BudgetScene {
-                scene.percent = CGFloat(1 - self.distance / Double(runBudget))
-                if scene.percent < 0 {
-                    scene.percent = 0
+            if runBudget > 0 {
+                if let scene = runBudgetSprite.scene as? BudgetScene {
+                    scene.percent = CGFloat(1 - self.distance / Double(runBudget))
+                    if scene.percent < 0 {
+                        scene.percent = 0
+                    }
                 }
             }
         }

@@ -76,20 +76,22 @@ class InterfaceController: WKInterfaceController {
                 
                 // Update progress bar
                 if let scene = self.runBudgetSprite.scene as? WeeklyProgressScene {
-                    scene.soFarPercent = CGFloat(point.thisWeek / point.targetMileage)
-                    scene.budgetPercent = CGFloat(Double(point.rightNow) / point.targetMileage)
-
-                    // Normalize percentages
-                    if scene.soFarPercent > 1 {
-                        scene.soFarPercent = 1
-                        scene.budgetPercent = 0
+                    if point.targetMileage > 0 {
+                        scene.soFarPercent = CGFloat(point.thisWeek / point.targetMileage)
+                        scene.budgetPercent = CGFloat(Double(point.rightNow) / point.targetMileage)
+                        
+                        // Normalize percentages
+                        if scene.soFarPercent > 1 {
+                            scene.soFarPercent = 1
+                            scene.budgetPercent = 0
+                        }
+                        else if scene.soFarPercent + scene.budgetPercent > 1 {
+                            scene.budgetPercent = 1 - scene.soFarPercent
+                        }
+                        
+                        // Update the sprite
+                        scene.updateProgressBar()
                     }
-                    else if scene.soFarPercent + scene.budgetPercent > 1 {
-                        scene.budgetPercent = 1 - scene.soFarPercent
-                    }
-                    
-                    // Update the sprite
-                    scene.updateProgressBar()
                 }
             }
             else {
