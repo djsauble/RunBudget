@@ -20,6 +20,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var runBudget: Int? = nil
     var unit: HKUnit? = nil
     var distance: Double = 0
+    var saveWorkout: Bool = true
     
     @IBOutlet var runBudgetLabel: WKInterfaceLabel!
     @IBOutlet var runBudgetElapsed: WKInterfaceLabel!
@@ -29,6 +30,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         super.awake(withContext: context)
         
         // Configure interface objects here.
+        self.setTitle(nil)
         
         // Initialize the scene
         let scene = BudgetScene(size: CGSize(width: self.contentFrame.width, height: 12))
@@ -80,6 +82,22 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     }
 
     @IBAction func finishRun() {
+        
+        // End the workout
+        if let healthStore = self.healthStore, let workoutSession = self.workoutSession {
+            healthStore.end(workoutSession)
+        }
+        
+        // Dismiss the controller
+        self.dismiss()
+    }
+    
+    @IBAction func abortRun() {
+        
+        // Don't save the workout
+        self.saveWorkout = false
+
+        // End the workout
         if let healthStore = self.healthStore, let workoutSession = self.workoutSession {
             healthStore.end(workoutSession)
         }
@@ -179,6 +197,12 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     }
     
     func saveSamples() {
+        
+        guard self.saveWorkout else {
+            // Don't save
+            return;
+        }
+        
         if let workoutSession = self.workoutSession, let healthStore = self.healthStore {
             let startDate = workoutSession.startDate ?? Date()
             let endDate = workoutSession.endDate ?? Date()

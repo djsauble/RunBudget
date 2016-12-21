@@ -81,12 +81,12 @@ class InterfaceController: WKInterfaceController {
             }
             
             // Refresh the complications
-            let server = CLKComplicationServer.sharedInstance()
+            /*let server = CLKComplicationServer.sharedInstance()
             if let activeComplications = server.activeComplications {
                 for complication in activeComplications {
                     server.reloadTimeline(for: complication)
                 }
-            }
+            }*/
         })
     }
 }

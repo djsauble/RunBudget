@@ -9,10 +9,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11508"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--Run Budget-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
+                <controller title="Run Budget" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
                     <items>
                         <label alignment="left" text="Run budget" id="mJf-NV-XIj">
                             <fontDescription key="font" style="UICTFontTextStyleBody"/>
@@ -59,8 +59,14 @@
                                 <action selector="finishRun" destination="cfF-Zh-XBx" id="Gdz-hI-Dgd"/>
                             </connections>
                         </button>
+                        <button width="1" alignment="left" title="Abort run" id="e2n-ES-ofk">
+                            <connections>
+                                <action selector="abortRun" destination="cfF-Zh-XBx" id="v8n-3T-Gv0"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
+                        <outlet property="abortRun" destination="e2n-ES-ofk" id="QCa-01-maF"/>
                         <outlet property="runBudgetElapsed" destination="aCf-08-zzj" id="RAy-Jb-Sdr"/>
                         <outlet property="runBudgetLabel" destination="8zr-Do-X2s" id="ZZY-fo-aGp"/>
                         <outlet property="runBudgetSprite" destination="VQ9-q6-EIs" id="arM-5o-gb9"/>
