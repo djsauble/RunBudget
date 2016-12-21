@@ -83,13 +83,11 @@ class ViewController: UIViewController {
                     self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km last week"
                 }
                 
-                self.thisWeekControl.soFar = Double(Int(point.thisWeek))
-                self.thisWeekControl.total = Double(Int(point.targetMileage))
+                self.thisWeekControl.soFar = point.thisWeek / point.targetMileage
                 self.thisWeekControl.render()
                 
-                self.runBudgetControl.soFar = Double(Int(point.thisWeek))
-                self.runBudgetControl.budget = Double(Int(point.rightNow))
-                self.runBudgetControl.total = Double(Int(point.targetMileage))
+                self.runBudgetControl.soFar = point.thisWeek / point.targetMileage
+                self.runBudgetControl.budget = Double(point.rightNow) / point.targetMileage
                 self.runBudgetControl.render()
             }
             else {

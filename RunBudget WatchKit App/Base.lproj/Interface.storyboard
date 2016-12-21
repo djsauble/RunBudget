@@ -12,7 +12,7 @@
         <!--Run Budget-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="Run Budget" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
+                <controller identifier="runBudget" title="Run Budget" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
                     <items>
                         <label alignment="left" text="0 mi now" id="Cc7-3N-30l">
                             <fontDescription key="font" type="system" weight="semibold" pointSize="24"/>
@@ -37,10 +37,10 @@
             </objects>
             <point key="canvasLocation" x="34" y="45.5"/>
         </scene>
-        <!--Run Controller-->
+        <!--runProgress-->
         <scene sceneID="S58-i3-NdS">
             <objects>
-                <controller id="cfF-Zh-XBx" customClass="RunController" customModule="RunBudget_WatchKit_Extension">
+                <controller identifier="runProgress" id="cfF-Zh-XBx" customClass="RunController" customModule="RunBudget_WatchKit_Extension">
                     <items>
                         <label alignment="left" text="0 mi left" id="8zr-Do-X2s">
                             <fontDescription key="font" type="system" weight="semibold" pointSize="24"/>
