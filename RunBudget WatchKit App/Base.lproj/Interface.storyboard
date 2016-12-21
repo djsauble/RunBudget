@@ -48,10 +48,11 @@
             <objects>
                 <controller id="cfF-Zh-XBx" customClass="RunController" customModule="RunBudget_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="Run budget" id="jAt-x2-8YR"/>
                         <label alignment="left" text="0 mi left" id="8zr-Do-X2s">
-                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                            <fontDescription key="font" type="system" weight="semibold" pointSize="24"/>
                         </label>
+                        <spriteKitScene height="12" alignment="left" scene="BudgetScene" id="VQ9-q6-EIs"/>
+                        <label alignment="left" text="0 mi" id="aCf-08-zzj"/>
                         <button width="1" alignment="left" title="Finish run" id="H1g-cO-LEZ">
                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -60,7 +61,9 @@
                         </button>
                     </items>
                     <connections>
+                        <outlet property="runBudgetElapsed" destination="aCf-08-zzj" id="RAy-Jb-Sdr"/>
                         <outlet property="runBudgetLabel" destination="8zr-Do-X2s" id="ZZY-fo-aGp"/>
+                        <outlet property="runBudgetSprite" destination="VQ9-q6-EIs" id="arM-5o-gb9"/>
                     </connections>
                 </controller>
             </objects>

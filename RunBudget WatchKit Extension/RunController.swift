@@ -9,6 +9,8 @@
 import WatchKit
 import Foundation
 import HealthKit
+import SpriteKit
+import UIKit
 
 class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
 
@@ -20,11 +22,19 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var distance: Double = 0
     
     @IBOutlet var runBudgetLabel: WKInterfaceLabel!
+    @IBOutlet var runBudgetElapsed: WKInterfaceLabel!
+    @IBOutlet var runBudgetSprite: WKInterfaceSKScene!
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
         // Configure interface objects here.
+        
+        // Initialize the scene
+        let scene = BudgetScene(size: CGSize(width: self.contentFrame.width, height: 12))
+        runBudgetSprite.presentScene(scene)
+
+        // Load the run budget from the context passed to us
         loadContext(context: context)
         
         // Set the units
@@ -86,11 +96,23 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     
     func updateInterface() {
         if let runBudget = self.runBudget {
+
+            // Update labels
             if self.unit == HKUnit.mile() {
                 runBudgetLabel.setText("\(Double(Int((Double(runBudget) - self.distance) * 100.0)) / 100.0) mi left")
+                runBudgetElapsed.setText("\(Double(Int(ceil(self.distance * 100.0))) / 100.0) mi")
             }
             else {
                 runBudgetLabel.setText("\(Double(Int((Double(runBudget) - self.distance) * 100.0)) / 100.0) km left")
+                runBudgetElapsed.setText("\(Double(Int(ceil(self.distance * 100.0))) / 100.0) km")
+            }
+            
+            // Update progress bar
+            if let scene = runBudgetSprite.scene as? BudgetScene {
+                scene.percent = CGFloat(1 - self.distance / Double(runBudget))
+                if scene.percent < 0 {
+                    scene.percent = 0
+                }
             }
         }
     }
