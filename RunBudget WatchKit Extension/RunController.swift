@@ -30,7 +30,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         super.awake(withContext: context)
         
         // Configure interface objects here.
-        self.setTitle(nil)
+        self.setTitle("")
         
         // Initialize the scene
         let scene = BudgetScene(size: CGSize(width: self.contentFrame.width, height: 12))

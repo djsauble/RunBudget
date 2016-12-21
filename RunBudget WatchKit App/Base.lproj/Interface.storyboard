@@ -14,20 +14,12 @@
             <objects>
                 <controller title="Run Budget" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="RunBudget_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="Run budget" id="mJf-NV-XIj">
-                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                        <label alignment="left" text="0 mi now" id="Cc7-3N-30l">
+                            <fontDescription key="font" type="system" weight="semibold" pointSize="24"/>
                         </label>
-                        <label alignment="left" text="0 miles" id="Cc7-3N-30l">
-                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
-                        </label>
-                        <label alignment="left" text="Weekly goal" id="wP4-cj-9Ol"/>
-                        <label alignment="left" text="0 of 0 miles" id="bjF-Bu-WHo">
-                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
-                        </label>
-                        <label alignment="left" text="Last week" baselineAdjustment="alignCenters" id="g2Z-kr-Vx5"/>
-                        <label alignment="left" text="0 miles" id="KEE-4a-mW1">
-                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
-                        </label>
+                        <spriteKitScene height="12" alignment="left" id="HRO-Yj-8Du"/>
+                        <label alignment="left" text="0 mi this week" baselineAdjustment="alignCenters" id="g2Z-kr-Vx5"/>
+                        <label alignment="left" text="0 mi last week" id="wP4-cj-9Ol"/>
                         <button width="1" alignment="left" title="Go for a run" id="eMz-AU-C0f">
                             <color key="backgroundColor" red="0.066666666669999999" green="0.40000000000000002" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -37,11 +29,13 @@
                     </items>
                     <connections>
                         <outlet property="howFarLabel" destination="Cc7-3N-30l" id="xeq-mW-7Ef"/>
-                        <outlet property="lastWeekLabel" destination="KEE-4a-mW1" id="HaJ-tC-RPn"/>
-                        <outlet property="thisWeekLabel" destination="bjF-Bu-WHo" id="pUe-Ec-pBp"/>
+                        <outlet property="lastWeekLabel" destination="wP4-cj-9Ol" id="fHa-Nr-R1s"/>
+                        <outlet property="runBudgetSprite" destination="HRO-Yj-8Du" id="arA-Ys-MTi"/>
+                        <outlet property="thisWeekLabel" destination="g2Z-kr-Vx5" id="0CJ-qG-h5w"/>
                     </connections>
                 </controller>
             </objects>
+            <point key="canvasLocation" x="34" y="45.5"/>
         </scene>
         <!--Run Controller-->
         <scene sceneID="S58-i3-NdS">
@@ -52,7 +46,7 @@
                             <fontDescription key="font" type="system" weight="semibold" pointSize="24"/>
                         </label>
                         <spriteKitScene height="12" alignment="left" scene="BudgetScene" id="VQ9-q6-EIs"/>
-                        <label alignment="left" text="0 mi" id="aCf-08-zzj"/>
+                        <label alignment="left" text="0 mi so far" id="aCf-08-zzj"/>
                         <button width="1" alignment="left" title="Finish run" id="H1g-cO-LEZ">
                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>

@@ -16,12 +16,17 @@ class InterfaceController: WKInterfaceController {
     @IBOutlet var howFarLabel: WKInterfaceLabel!
     @IBOutlet var thisWeekLabel: WKInterfaceLabel!
     @IBOutlet var lastWeekLabel: WKInterfaceLabel!
+    @IBOutlet var runBudgetSprite: WKInterfaceSKScene!
     @IBOutlet var startWorkout: WKInterfaceButton!
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
         // Configure interface objects here.
+        
+        // Initialize the scene
+        let scene = WeeklyProgressScene(size: CGSize(width: self.contentFrame.width, height: 12))
+        runBudgetSprite.presentScene(scene)
         
         // Start listening for new workouts
         WorkoutData.shared.listenForTrendingData(handler: self.updateInterface)
@@ -54,17 +59,37 @@ class InterfaceController: WKInterfaceController {
             (point: WorkoutData.Point?) in
             
             if let point = point {
+                
+                // Update labels
                 if unit == "mi" {
-                    self.howFarLabel.setText("\(point.rightNow) miles")
-                    self.thisWeekLabel.setText("\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles")
-                    self.lastWeekLabel.setText("\(Int(point.lastWeek)) miles")
+                    self.howFarLabel.setText("\(point.rightNow) mi now")
+                    self.thisWeekLabel.setText("\(Int(point.targetMileage)) mi this week")
+                    self.lastWeekLabel.setText("\(Int(point.lastWeek)) mi last week")
                     self.runBudget = point.rightNow
                 }
                 else {
-                    self.howFarLabel.setText("\(point.rightNow / 1000) km")
-                    self.thisWeekLabel.setText("\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km")
-                    self.lastWeekLabel.setText("\(Int(point.lastWeek / 1000)) km")
+                    self.howFarLabel.setText("\(point.rightNow / 1000) km now")
+                    self.thisWeekLabel.setText("\(Int(point.targetMileage / 1000)) km this week")
+                    self.lastWeekLabel.setText("\(Int(point.lastWeek / 1000)) km last week")
                     self.runBudget = Int(point.rightNow / 1000)
+                }
+                
+                // Update progress bar
+                if let scene = self.runBudgetSprite.scene as? WeeklyProgressScene {
+                    scene.soFarPercent = CGFloat(point.thisWeek / point.targetMileage)
+                    scene.budgetPercent = CGFloat(Double(point.rightNow) / point.targetMileage)
+
+                    // Normalize percentages
+                    if scene.soFarPercent > 1 {
+                        scene.soFarPercent = 1
+                        scene.budgetPercent = 0
+                    }
+                    else if scene.soFarPercent + scene.budgetPercent > 1 {
+                        scene.budgetPercent = 1 - scene.soFarPercent
+                    }
+                    
+                    // Update the sprite
+                    scene.updateProgressBar()
                 }
             }
             else {

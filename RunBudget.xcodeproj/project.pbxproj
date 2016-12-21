@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FB05DF7E1E09FD6F00B145F0 /* BudgetScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB05DF7D1E09FD6F00B145F0 /* BudgetScene.swift */; };
+		FB05DF801E0A3C9300B145F0 /* WeeklyProgressScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB05DF7F1E0A3C9300B145F0 /* WeeklyProgressScene.swift */; };
 		FB2016891D9DD40900558187 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2016881D9DD40900558187 /* AppDelegate.swift */; };
 		FB20168B1D9DD40900558187 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB20168A1D9DD40900558187 /* ViewController.swift */; };
 		FB20168E1D9DD40900558187 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB20168C1D9DD40900558187 /* Main.storyboard */; };
@@ -89,6 +90,7 @@
 
 /* Begin PBXFileReference section */
 		FB05DF7D1E09FD6F00B145F0 /* BudgetScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BudgetScene.swift; sourceTree = "<group>"; };
+		FB05DF7F1E0A3C9300B145F0 /* WeeklyProgressScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeeklyProgressScene.swift; sourceTree = "<group>"; };
 		FB2016851D9DD40900558187 /* RunBudget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunBudget.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB2016881D9DD40900558187 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB20168A1D9DD40900558187 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				FBBA83221DDF70B500482CCA /* Session.swift */,
 				FB79CD0F1E08FBAA00657C56 /* RunController.swift */,
 				FB05DF7D1E09FD6F00B145F0 /* BudgetScene.swift */,
+				FB05DF7F1E0A3C9300B145F0 /* WeeklyProgressScene.swift */,
 			);
 			path = "RunBudget WatchKit Extension";
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				FBBA83211DDF6DD100482CCA /* TrendCache.swift in Sources */,
 				FB8CE85E1DDBDD97001278AF /* UnitStore.swift in Sources */,
 				FB05DF7E1E09FD6F00B145F0 /* BudgetScene.swift in Sources */,
+				FB05DF801E0A3C9300B145F0 /* WeeklyProgressScene.swift in Sources */,
 				FB2016AC1D9DD40900558187 /* InterfaceController.swift in Sources */,
 				FB2016B01D9DD40900558187 /* ComplicationController.swift in Sources */,
 				FB79CD101E08FBAA00657C56 /* RunController.swift in Sources */,

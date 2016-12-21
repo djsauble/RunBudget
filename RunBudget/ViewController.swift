@@ -73,13 +73,13 @@ class ViewController: UIViewController {
             
             if let point = point {
                 if UnitStore.shared.unit == HKUnit.mile() {
-                    self.howFarLabel.text = "\(point.rightNow) miles"
-                    self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles"
+                    self.howFarLabel.text = "\(point.rightNow) miles now"
+                    self.thisWeekLabel.text = "\(Int(point.thisWeek)) of \(Int(point.targetMileage)) miles this week"
                     self.lastWeekLabel.text = "\(Int(point.lastWeek)) miles last week"
                 }
                 else {
-                    self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km"
-                    self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km"
+                    self.howFarLabel.text = "\(Int(point.rightNow / 1000)) km now"
+                    self.thisWeekLabel.text = "\(Int(point.thisWeek / 1000)) of \(Int(point.targetMileage / 1000)) km this week"
                     self.lastWeekLabel.text = "\(Int(point.lastWeek / 1000)) km last week"
                 }
                 
@@ -94,13 +94,13 @@ class ViewController: UIViewController {
             }
             else {
                 if UnitStore.shared.unit == HKUnit.mile() {
-                    self.howFarLabel.text = "— miles"
-                    self.thisWeekLabel.text = "— of — miles"
+                    self.howFarLabel.text = "— miles now"
+                    self.thisWeekLabel.text = "— of — miles this wek"
                     self.lastWeekLabel.text = "— miles last week"
                 }
                 else {
-                    self.howFarLabel.text = "— km"
-                    self.thisWeekLabel.text = "— of — km"
+                    self.howFarLabel.text = "— km now"
+                    self.thisWeekLabel.text = "— of — km this week"
                     self.lastWeekLabel.text = "— km last week"
                 }
             }
