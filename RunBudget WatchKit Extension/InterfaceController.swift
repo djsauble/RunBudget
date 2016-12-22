@@ -27,9 +27,6 @@ class InterfaceController: WKInterfaceController {
         // Initialize the scene
         let scene = WeeklyProgressScene(size: CGSize(width: self.contentFrame.width, height: 12))
         runBudgetSprite.presentScene(scene)
-        
-        // Start listening for new workouts
-        WorkoutData.shared.listenForTrendingData(handler: self.updateInterface)
     }
     
     override func willActivate() {
