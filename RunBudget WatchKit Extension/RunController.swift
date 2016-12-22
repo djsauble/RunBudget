@@ -126,15 +126,22 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     }
     
     func updateInterface() {
+
         if let runBudget = self.runBudget {
+            
+            // Remaining run budget is not allowed to be negative
+            var remaining: Double = 0.0
+            if Double(runBudget) - self.distance > 0 {
+                remaining = Double(runBudget) - self.distance
+            }
 
             // Update labels
             if self.unit == HKUnit.mile() {
-                runBudgetLabel.setText("\(Double(Int((Double(runBudget) - self.distance) * 100.0)) / 100.0) mi left")
+                runBudgetLabel.setText("\(Double(Int(remaining * 100.0)) / 100.0) mi left")
                 runBudgetElapsed.setText("\(Double(Int(ceil(self.distance * 100.0))) / 100.0) mi")
             }
             else {
-                runBudgetLabel.setText("\(Double(Int((Double(runBudget) - self.distance) * 100.0)) / 100.0) km left")
+                runBudgetLabel.setText("\(Double(Int(remaining * 100.0)) / 100.0) km left")
                 runBudgetElapsed.setText("\(Double(Int(ceil(self.distance * 100.0))) / 100.0) km")
             }
             
