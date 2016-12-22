@@ -21,10 +21,12 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var unit: HKUnit? = nil
     var distance: Double = 0
     var saveWorkout: Bool = true
+    var paused: Bool = false
     
     @IBOutlet var runBudgetLabel: WKInterfaceLabel!
     @IBOutlet var runBudgetElapsed: WKInterfaceLabel!
     @IBOutlet var runBudgetSprite: WKInterfaceSKScene!
+    @IBOutlet var pauseButton: WKInterfaceButton!
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -79,6 +81,17 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     override func didDeactivate() {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
+    }
+
+    @IBAction func toggleRun() {
+        if let healthStore = self.healthStore, let workoutSession = self.workoutSession {
+            if paused {
+                healthStore.resumeWorkoutSession(workoutSession)
+            }
+            else {
+                healthStore.pause(workoutSession)
+            }
+        }
     }
 
     @IBAction func finishRun() {
@@ -145,10 +158,22 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             if fromState == .notStarted {
                 startSampling()
             }
+            else if fromState == .paused {
+                self.paused = false
+                self.pauseButton.setTitle("Pause run")
+                self.pauseButton.setBackgroundColor(UIColor.yellow)
+            }
         }
         else if toState == .ended {
             if fromState == .running {
                 saveSamples()
+            }
+        }
+        else if toState == .paused {
+            if fromState == .running {
+                self.paused = true
+                self.pauseButton.setTitle("Resume run")
+                self.pauseButton.setBackgroundColor(UIColor.green)
             }
         }
     }
@@ -174,6 +199,11 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             
             let updateHandler: (HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Void = {
                 query, samples, deletedObjects, queryAnchor, error in
+
+                guard self.paused == false else {
+                    // Do not accumulate distance while paused
+                    return
+                }
 
                 // Aggregate samples
                 if let samples = samples as? [HKQuantitySample] {

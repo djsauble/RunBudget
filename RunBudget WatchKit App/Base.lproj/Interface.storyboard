@@ -47,6 +47,13 @@
                         </label>
                         <spriteKitScene height="12" alignment="left" scene="BudgetScene" id="VQ9-q6-EIs"/>
                         <label alignment="left" text="0 mi so far" id="aCf-08-zzj"/>
+                        <button width="1" alignment="left" title="Pause run" id="VPW-j8-zCS">
+                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="toggleRun" destination="cfF-Zh-XBx" id="RhW-wL-uIR"/>
+                            </connections>
+                        </button>
                         <button width="1" alignment="left" title="Finish run" id="H1g-cO-LEZ">
                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -61,6 +68,7 @@
                     </items>
                     <connections>
                         <outlet property="abortRun" destination="e2n-ES-ofk" id="QCa-01-maF"/>
+                        <outlet property="pauseButton" destination="VPW-j8-zCS" id="QOD-3E-r09"/>
                         <outlet property="runBudgetElapsed" destination="aCf-08-zzj" id="RAy-Jb-Sdr"/>
                         <outlet property="runBudgetLabel" destination="8zr-Do-X2s" id="ZZY-fo-aGp"/>
                         <outlet property="runBudgetSprite" destination="VQ9-q6-EIs" id="arM-5o-gb9"/>
