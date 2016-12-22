@@ -226,12 +226,83 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             }
             
             healthStore.save(workout, withCompletion: { (success, error) -> Void in
-                guard success else {
+                if success {
+                    self.addSamples(workout: workout)
+                }
+                else {
                     // Add proper error handling here...
-                    print("*** Could not save the active energy burned samples: \(error?.localizedDescription) ***")
-                    return
+                    print("*** Could not save the workout: \(error?.localizedDescription) ***")
                 }
             })
+        }
+    }
+    
+    func addSamples(workout: HKWorkout) {
+        if let workoutSession = self.workoutSession, let healthStore = self.healthStore {
+            let startDate = workoutSession.startDate ?? Date()
+            let endDate = workoutSession.endDate ?? Date()
+            
+            let datePredicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+            let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
+            let queryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, devicePredicate])
+            
+            // Query for active energy burned samples
+            if let energyBurnedType = HKSampleType.quantityType(forIdentifier: .activeEnergyBurned) {
+                
+                // Handle results from energy burned query
+                let energyBurnedQueryHandler: (HKSampleQuery, [HKSample]?, Error?) -> Void = {
+                    query, samples, error in
+                    
+                    if let samples = samples {
+                        healthStore.add(samples, to: workout, completion: {
+                            success, error in
+                            guard success else {
+                                print("*** Could not save active energy burned samples: \(error?.localizedDescription) ***")
+                                return
+                            }
+                        })
+                    }
+                }
+                
+                // Setup the query
+                let query = HKSampleQuery(sampleType: energyBurnedType,
+                                          predicate: queryPredicate,
+                                          limit: HKObjectQueryNoLimit,
+                                          sortDescriptors: nil,
+                                          resultsHandler: energyBurnedQueryHandler)
+                
+                // Execute the query
+                healthStore.execute(query)
+            }
+            
+            // Query for heart rate
+            if let heartRateType = HKSampleType.quantityType(forIdentifier: .heartRate) {
+                
+                // Handle results from heart rate query
+                let heartRateQueryHandler: (HKSampleQuery, [HKSample]?, Error?) -> Void = {
+                    query, samples, error in
+                    
+                    if let samples = samples {
+                        healthStore.add(samples, to: workout, completion: {
+                            success, error in
+                            guard success else {
+                                print("*** Could not save heart rate samples: \(error?.localizedDescription) ***")
+                                return
+                            }
+                        })
+                    }
+                }
+                
+                // Setup the query
+                let query = HKSampleQuery(sampleType: heartRateType,
+                                          predicate: queryPredicate,
+                                          limit: HKObjectQueryNoLimit,
+                                          sortDescriptors: nil,
+                                          resultsHandler: heartRateQueryHandler)
+                
+                // Execute the query
+                healthStore.execute(query)
+            }
         }
     }
 }

@@ -330,12 +330,16 @@ class WorkoutData {
             // Set the types you want to read from HKHealthStore
             let healthKitTypesToRead = Set<HKObjectType>([
                 HKObjectType.workoutType(),
-                HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
+                HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+                HKObjectType.quantityType(forIdentifier: .heartRate)!
                 ])
             
             // Set the types you want to share with HKHealthStore
             let healthKitTypesToShare = Set<HKSampleType>([
-                HKObjectType.workoutType()
+                HKObjectType.workoutType(),
+                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+                HKObjectType.quantityType(forIdentifier: .heartRate)!
                 ])
             
             // Request HealthKit authorization
