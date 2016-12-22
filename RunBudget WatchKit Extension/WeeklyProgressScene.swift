@@ -22,11 +22,11 @@ class WeeklyProgressScene: SKScene {
         self.backgroundColor = UIColor.white
         
         // Define the distance we've run so far this week
-        self.soFarBar = SKSpriteNode(color: UIColor.green, size: CGSize(width: 0, height: self.size.height))
+        self.soFarBar = SKSpriteNode(color: UIColor.blue, size: CGSize(width: 0, height: self.size.height))
         self.soFarBar.anchorPoint = CGPoint(x: 0, y: 0)
         
         // Define our current run budget
-        self.budgetBar = SKSpriteNode(color: UIColor.blue, size: CGSize(width: 0, height: self.size.height))
+        self.budgetBar = SKSpriteNode(color: UIColor.green, size: CGSize(width: 0, height: self.size.height))
         self.budgetBar.anchorPoint = CGPoint(x: 0, y: 0)
         
         // Define the remaining mileage this week

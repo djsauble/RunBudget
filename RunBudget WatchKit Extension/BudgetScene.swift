@@ -23,11 +23,11 @@ class BudgetScene: SKScene {
         self.backgroundColor = UIColor.white
         
         // Define the distance we’ve run so far
-        self.soFarBar = SKSpriteNode(color: UIColor.green, size: CGSize(width: 0, height: self.size.height))
+        self.soFarBar = SKSpriteNode(color: UIColor.blue, size: CGSize(width: 0, height: self.size.height))
         self.soFarBar.anchorPoint = CGPoint(x: 0, y: 0)
         
         // Define the progress bar
-        self.progressBar = SKSpriteNode(color: UIColor.blue, size: CGSize(width: self.size.width, height: self.size.height))
+        self.progressBar = SKSpriteNode(color: UIColor.green, size: CGSize(width: self.size.width, height: self.size.height))
         self.progressBar.anchorPoint = CGPoint(x: 0, y: 0)
 
         // Add bars to the scene

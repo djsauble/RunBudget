@@ -82,14 +82,14 @@ class BudgetControl: UIView {
         // Add the new bars
         let soFarView: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: bar1Width, height: barHeight))
         if let bar = soFarView {
-            bar.backgroundColor = UIColor.green
+            bar.backgroundColor = UIColor.blue
             self.soFarView = bar
             self.addSubview(bar)
         }
     
         let budgetView: UIView? = UIView(frame: CGRect(x: 0, y: 0, width: bar2Width, height: barHeight))
         if let bar = budgetView {
-            bar.backgroundColor = UIColor.blue
+            bar.backgroundColor = UIColor.green
             self.budgetView = bar
             self.addSubview(bar)
         }
