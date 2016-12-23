@@ -20,6 +20,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var runBudget: Int? = nil
     var unit: HKUnit? = nil
     var distance: Double = 0
+    var distanceSamples: [HKQuantitySample] = []
     var saveWorkout: Bool = true
     var paused: Bool = false
     
@@ -214,6 +215,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
 
                 // Aggregate samples
                 if let samples = samples as? [HKQuantitySample] {
+                    self.distanceSamples.append(contentsOf: samples)
                     for sample in samples {
                         self.distance += sample.quantity.doubleValue(for: self.unit ?? HKUnit.mile())
                     }
@@ -340,6 +342,15 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
                 // Execute the query
                 healthStore.execute(query)
             }
+            
+            // Add distance samples
+            healthStore.add(self.distanceSamples, to: workout, completion: {
+                success, error in
+                guard success else {
+                    print("*** Could not save distance samples: \(error?.localizedDescription) ***")
+                    return
+                }
+            })
         }
     }
 }
