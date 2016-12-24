@@ -26,6 +26,10 @@
 	<string>Create weekly goals based on your workout history</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Create weekly goals based on your workout history</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
