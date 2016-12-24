@@ -19,16 +19,18 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var configuration: HKWorkoutConfiguration? = nil
     var runBudget: Int? = nil
     var unit: HKUnit? = nil
-    var distance: Double = 0
     var workoutAborted: Bool = false
     var budgetHalfUsed: Bool = false
     var budgetAllUsed: Bool = false
     var paused: Bool = false
     
-    // Samples
-    var distanceSamples: [HKQuantitySample] = []
-    var activeEnergyBurnedSamples: [HKQuantitySample] = []
+    // Totals
+    var distance: Double = 0
+    var activeEnergyBurned: Double = 0
     var heartRateSamples: [HKQuantitySample] = []
+    
+    // Active queries
+    var activeQueries: [HKAnchoredObjectQuery] = []
     
     @IBOutlet var runBudgetLabel: WKInterfaceLabel!
     @IBOutlet var runBudgetElapsed: WKInterfaceLabel!
@@ -170,9 +172,9 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         
         if toState == .running {
             if fromState == .notStarted {
-                startSamplingDistance()
-                startSamplingActiveEnergyBurned()
-                startSamplingHeartRate()
+                self.startSamplingDistance()
+                self.startSamplingActiveEnergyBurned()
+                self.startSamplingHeartRate()
             }
             else if fromState == .paused {
                 self.paused = false
@@ -181,16 +183,13 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             }
         }
         else if toState == .ended {
-            if fromState == .running {
-                saveWorkout()
-            }
+            self.stopQueries()
+            self.saveWorkout()
         }
         else if toState == .paused {
-            if fromState == .running {
-                self.paused = true
-                self.pauseButton.setTitle("Resume run")
-                self.pauseButton.setBackgroundColor(UIColor.green)
-            }
+            self.paused = true
+            self.pauseButton.setTitle("Resume run")
+            self.pauseButton.setBackgroundColor(UIColor.green)
         }
     }
     
@@ -230,6 +229,8 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             query.updateHandler = updateHandler
             
             healthStore.execute(query)
+            
+            self.activeQueries.append(query)
         }
     }
     
@@ -246,9 +247,6 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             
             // Aggregate samples
             if let samples = samples as? [HKQuantitySample] {
-                
-                // Add samples to the distance array
-                self.distanceSamples.append(contentsOf: samples)
                 
                 // Sum the distances
                 for sample in samples {
@@ -290,7 +288,9 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             
             // Aggregate samples
             if let samples = samples as? [HKQuantitySample] {
-                self.activeEnergyBurnedSamples.append(contentsOf: samples)
+                for sample in samples {
+                    self.activeEnergyBurned += sample.quantity.doubleValue(for: HKUnit.calorie())
+                }
             }
         })
     }
@@ -313,6 +313,20 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         })
     }
     
+    // Stop any active queries
+    func stopQueries() {
+        if let healthStore = self.healthStore {
+            for query in activeQueries {
+                healthStore.stop(query)
+            }
+        }
+        else {
+            // Proper error handling here
+            print("Could not access the health store in order to stop active queries")
+        }
+    }
+    
+    // Save the workout and add samples to it
     func saveWorkout() {
         
         guard !self.workoutAborted else {
@@ -326,11 +340,14 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             let duration = endDate.timeIntervalSince(startDate)
             let distance = HKQuantity(unit: self.unit ?? HKUnit.mile(), doubleValue: self.distance)
             
+            // Create a sample for total energy burned
+            let totalEnergyBurned = HKQuantity(unit: HKUnit.calorie(), doubleValue: activeEnergyBurned)
+            
             let workout = HKWorkout(activityType: self.configuration?.activityType ?? .running,
                                     start: startDate,
                                     end: endDate,
                                     duration: duration,
-                                    totalEnergyBurned: nil,
+                                    totalEnergyBurned: totalEnergyBurned,
                                     totalDistance: distance,
                                     device: HKDevice.local(),
                                     metadata: [HKMetadataKeyIndoorWorkout: (self.configuration?.locationType ?? .outdoor) == .indoor])
@@ -342,7 +359,11 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
             
             healthStore.save(workout, withCompletion: { (success, error) -> Void in
                 if success {
-                    self.addSamples(workout: workout)
+                    self.addSamples(workout: workout, handler: {
+                        print("*** Done adding samples ***")
+                        
+                        // TODO: Okay to dismiss the modal now
+                    })
                 }
                 else {
                     // Add proper error handling here...
@@ -352,39 +373,19 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         }
     }
     
-    func addSamples(workout: HKWorkout) {
+    func addSamples(workout: HKWorkout, handler: @escaping () -> Void) {
         if let healthStore = self.healthStore {
-            
-            // Add distance samples
-            if !self.distanceSamples.isEmpty {
-                healthStore.add(distanceSamples, to: workout, completion: {
-                    success, error in
-                    guard success else {
-                        print("*** Could not save distance samples: \(error?.localizedDescription) ***")
-                        return
-                    }
-                })
-            }
-            
-            // Add active energy burned samples
-            if !self.activeEnergyBurnedSamples.isEmpty {
-                healthStore.add(activeEnergyBurnedSamples, to: workout, completion: {
-                    success, error in
-                    guard success else {
-                        print("*** Could not save active energy burned samples: \(error?.localizedDescription) ***")
-                        return
-                    }
-                })
-            }
             
             // Add heart rate samples
             if !self.heartRateSamples.isEmpty {
                 healthStore.add(heartRateSamples, to: workout, completion: {
                     success, error in
-                    guard success else {
+                    if !success {
                         print("*** Could not save heart rate samples: \(error?.localizedDescription) ***")
-                        return
                     }
+                    
+                    // Completion handler
+                    handler()
                 })
             }
         }
