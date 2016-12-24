@@ -257,15 +257,17 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
                 
                 // If we've used half or all of our run budget, play a haptic notification
                 if let runBudget = self.runBudget {
-                    if runBudget > 0 && Double(runBudget) <= self.distance * 2 && !self.budgetHalfUsed {
-                        // Halfway point
-                        WKInterfaceDevice.current().play(.notification)
-                        self.budgetHalfUsed = true
-                    }
-                    else if Double(runBudget) <= self.distance && !self.budgetAllUsed {
-                        // All done
-                        WKInterfaceDevice.current().play(.notification)
-                        self.budgetAllUsed = true
+                    if runBudget > 0 {
+                        if Double(runBudget) <= self.distance * 2 && !self.budgetHalfUsed {
+                            // Halfway point
+                            WKInterfaceDevice.current().play(.notification)
+                            self.budgetHalfUsed = true
+                        }
+                        else if Double(runBudget) <= self.distance && !self.budgetAllUsed {
+                            // All done
+                            WKInterfaceDevice.current().play(.notification)
+                            self.budgetAllUsed = true
+                        }
                     }
                 }
             }
