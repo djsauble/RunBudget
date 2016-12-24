@@ -21,6 +21,8 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var unit: HKUnit? = nil
     var distance: Double = 0
     var workoutAborted: Bool = false
+    var budgetHalfUsed: Bool = false
+    var budgetAllUsed: Bool = false
     var paused: Bool = false
     
     // Samples
@@ -251,6 +253,20 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
                 // Sum the distances
                 for sample in samples {
                     self.distance += sample.quantity.doubleValue(for: self.unit ?? HKUnit.mile())
+                }
+                
+                // If we've used half or all of our run budget, play a haptic notification
+                if let runBudget = self.runBudget {
+                    if runBudget > 0 && Double(runBudget) <= self.distance * 2 && !self.budgetHalfUsed {
+                        // Halfway point
+                        WKInterfaceDevice.current().play(.notification)
+                        self.budgetHalfUsed = true
+                    }
+                    else if Double(runBudget) <= self.distance && !self.budgetAllUsed {
+                        // All done
+                        WKInterfaceDevice.current().play(.notification)
+                        self.budgetAllUsed = true
+                    }
                 }
             }
             
