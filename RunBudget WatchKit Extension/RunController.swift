@@ -315,7 +315,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     
     func saveWorkout() {
         
-        guard self.workoutAborted else {
+        guard !self.workoutAborted else {
             // Don't save
             return;
         }
