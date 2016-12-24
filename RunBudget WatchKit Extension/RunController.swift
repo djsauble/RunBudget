@@ -20,9 +20,13 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     var runBudget: Int? = nil
     var unit: HKUnit? = nil
     var distance: Double = 0
-    var distanceSamples: [HKQuantitySample] = []
-    var saveWorkout: Bool = true
+    var workoutAborted: Bool = false
     var paused: Bool = false
+    
+    // Samples
+    var distanceSamples: [HKQuantitySample] = []
+    var activeEnergyBurnedSamples: [HKQuantitySample] = []
+    var heartRateSamples: [HKQuantitySample] = []
     
     @IBOutlet var runBudgetLabel: WKInterfaceLabel!
     @IBOutlet var runBudgetElapsed: WKInterfaceLabel!
@@ -109,7 +113,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     @IBAction func abortRun() {
         
         // Don't save the workout
-        self.saveWorkout = false
+        self.workoutAborted = true
 
         // End the workout
         if let healthStore = self.healthStore, let workoutSession = self.workoutSession {
@@ -164,7 +168,9 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         
         if toState == .running {
             if fromState == .notStarted {
-                startSampling()
+                startSamplingDistance()
+                startSamplingActiveEnergyBurned()
+                startSamplingHeartRate()
             }
             else if fromState == .paused {
                 self.paused = false
@@ -174,7 +180,7 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         }
         else if toState == .ended {
             if fromState == .running {
-                saveSamples()
+                saveWorkout()
             }
         }
         else if toState == .paused {
@@ -190,18 +196,15 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         fatalError("*** Unable to start the workout session: \(error.localizedDescription) *** ")
     }
     
-    func startSampling() {
+    // Start a long-running query for any samples of a given type during the current workout session
+    func startSampling(_ type: HKQuantityType, handler: @escaping ([HKSample]?) -> Void) {
         if let workoutSession = self.workoutSession, let healthStore = self.healthStore {
+            
             // Object predicate
             
             let datePredicate = HKQuery.predicateForSamples(withStart: workoutSession.startDate, end: nil, options: .strictStartDate)
             let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
             let queryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, devicePredicate])
-            
-            let quantityType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)
-            guard quantityType != nil else {
-                fatalError("*** Could not create a quantity type")
-            }
             
             // Handle updates
             
@@ -212,20 +215,11 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
                     // Do not accumulate distance while paused
                     return
                 }
-
-                // Aggregate samples
-                if let samples = samples as? [HKQuantitySample] {
-                    self.distanceSamples.append(contentsOf: samples)
-                    for sample in samples {
-                        self.distance += sample.quantity.doubleValue(for: self.unit ?? HKUnit.mile())
-                    }
-                }
                 
-                // Update the interface
-                self.updateInterface()
+                handler(samples)
             }
             
-            let query = HKAnchoredObjectQuery(type: quantityType!,
+            let query = HKAnchoredObjectQuery(type: type,
                                               predicate: queryPredicate,
                                               anchor: nil,
                                               limit: HKObjectQueryNoLimit,
@@ -237,9 +231,73 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
         }
     }
     
-    func saveSamples() {
+    // Start a long-running query for walking/running distance
+    func startSamplingDistance() {
         
-        guard self.saveWorkout else {
+        let quantityType: HKQuantityType! = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)
+        guard quantityType != nil else {
+            fatalError("*** Could not create a distance quantity type ***")
+        }
+        
+        self.startSampling(quantityType, handler: {
+            samples in
+            
+            // Aggregate samples
+            if let samples = samples as? [HKQuantitySample] {
+                
+                // Add samples to the distance array
+                self.distanceSamples.append(contentsOf: samples)
+                
+                // Sum the distances
+                for sample in samples {
+                    self.distance += sample.quantity.doubleValue(for: self.unit ?? HKUnit.mile())
+                }
+            }
+            
+            // Update the interface
+            self.updateInterface()
+        })
+    }
+    
+    // Start a long-running query for active energy burned
+    func startSamplingActiveEnergyBurned() {
+        
+        let quantityType: HKQuantityType! = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)
+        guard quantityType != nil else {
+            fatalError("*** Could not create an active energy burned quantity type ***")
+        }
+        
+        self.startSampling(quantityType, handler: {
+            samples in
+            
+            // Aggregate samples
+            if let samples = samples as? [HKQuantitySample] {
+                self.activeEnergyBurnedSamples.append(contentsOf: samples)
+            }
+        })
+    }
+    
+    // Start a long-running query for heart rate
+    func startSamplingHeartRate() {
+        
+        let quantityType: HKQuantityType! = HKQuantityType.quantityType(forIdentifier: .heartRate)
+        guard quantityType != nil else {
+            fatalError("*** Could not create a heart rate quantity type")
+        }
+        
+        self.startSampling(quantityType, handler: {
+            samples in
+            
+            // Aggregate samples
+            if let samples = samples as? [HKQuantitySample] {
+                self.heartRateSamples.append(contentsOf: samples)
+            }
+        })
+    }
+    
+    func saveWorkout() {
+        
+        guard self.workoutAborted else {
             // Don't save
             return;
         }
@@ -277,80 +335,40 @@ class RunController: WKInterfaceController, HKWorkoutSessionDelegate {
     }
     
     func addSamples(workout: HKWorkout) {
-        if let workoutSession = self.workoutSession, let healthStore = self.healthStore {
-            let startDate = workoutSession.startDate ?? Date()
-            let endDate = workoutSession.endDate ?? Date()
-            
-            let datePredicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
-            let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
-            let queryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, devicePredicate])
-            
-            // Query for active energy burned samples
-            if let energyBurnedType = HKSampleType.quantityType(forIdentifier: .activeEnergyBurned) {
-                
-                // Handle results from energy burned query
-                let energyBurnedQueryHandler: (HKSampleQuery, [HKSample]?, Error?) -> Void = {
-                    query, samples, error in
-                    
-                    if let samples = samples {
-                        healthStore.add(samples, to: workout, completion: {
-                            success, error in
-                            guard success else {
-                                print("*** Could not save active energy burned samples: \(error?.localizedDescription) ***")
-                                return
-                            }
-                        })
-                    }
-                }
-                
-                // Setup the query
-                let query = HKSampleQuery(sampleType: energyBurnedType,
-                                          predicate: queryPredicate,
-                                          limit: HKObjectQueryNoLimit,
-                                          sortDescriptors: nil,
-                                          resultsHandler: energyBurnedQueryHandler)
-                
-                // Execute the query
-                healthStore.execute(query)
-            }
-            
-            // Query for heart rate
-            if let heartRateType = HKSampleType.quantityType(forIdentifier: .heartRate) {
-                
-                // Handle results from heart rate query
-                let heartRateQueryHandler: (HKSampleQuery, [HKSample]?, Error?) -> Void = {
-                    query, samples, error in
-                    
-                    if let samples = samples {
-                        healthStore.add(samples, to: workout, completion: {
-                            success, error in
-                            guard success else {
-                                print("*** Could not save heart rate samples: \(error?.localizedDescription) ***")
-                                return
-                            }
-                        })
-                    }
-                }
-                
-                // Setup the query
-                let query = HKSampleQuery(sampleType: heartRateType,
-                                          predicate: queryPredicate,
-                                          limit: HKObjectQueryNoLimit,
-                                          sortDescriptors: nil,
-                                          resultsHandler: heartRateQueryHandler)
-                
-                // Execute the query
-                healthStore.execute(query)
-            }
+        if let healthStore = self.healthStore {
             
             // Add distance samples
-            healthStore.add(self.distanceSamples, to: workout, completion: {
-                success, error in
-                guard success else {
-                    print("*** Could not save distance samples: \(error?.localizedDescription) ***")
-                    return
-                }
-            })
+            if !self.distanceSamples.isEmpty {
+                healthStore.add(distanceSamples, to: workout, completion: {
+                    success, error in
+                    guard success else {
+                        print("*** Could not save distance samples: \(error?.localizedDescription) ***")
+                        return
+                    }
+                })
+            }
+            
+            // Add active energy burned samples
+            if !self.activeEnergyBurnedSamples.isEmpty {
+                healthStore.add(activeEnergyBurnedSamples, to: workout, completion: {
+                    success, error in
+                    guard success else {
+                        print("*** Could not save active energy burned samples: \(error?.localizedDescription) ***")
+                        return
+                    }
+                })
+            }
+            
+            // Add heart rate samples
+            if !self.heartRateSamples.isEmpty {
+                healthStore.add(heartRateSamples, to: workout, completion: {
+                    success, error in
+                    guard success else {
+                        print("*** Could not save heart rate samples: \(error?.localizedDescription) ***")
+                        return
+                    }
+                })
+            }
         }
     }
 }
